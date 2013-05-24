@@ -1,9 +1,11 @@
 package GameObject;
 
-public class Weapon extends Item {
+public class Weapon {
 
     protected int Damage;
     protected int Range;
+    public boolean attack;
+    public int x,y;
     
     public Weapon() {
         this.Damage = 0;
@@ -18,18 +20,24 @@ public class Weapon extends Item {
         this.Range = pRange;
     }
 
-    private void place() {
-        
-    }
-    
-    @Override
-    public void obtain() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setAttack(boolean pAttack) {
+        this.attack = pAttack;
     }
 
-    @Override
-    public void use() {
-        
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int px) {
+        this.x = px;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int py) {
+        this.y = py;
     }
     
 }
