@@ -1,12 +1,14 @@
 package GameObject;
 
+import Engine.Game;
 import Engine.InputErrorException;
 import Engine.SpriteSheetLoader;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import javax.imageio.ImageIO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 public class Player {
@@ -17,69 +19,87 @@ public class Player {
    private int Score;
    private int Life;
    private int Velocity;
+   private boolean Damaged;
    public Weapon Gun;
-   public SpriteSheetLoader ActorWalk;
-   public BufferedImage ActorWalk_static;
-   public int Direction;
+   private SpriteSheetLoader ActorWalk;
+   private BufferedImage ActorWalk_static;
+   private Image Heart;
+   private int Direction;
    
    public Player (String pName){
        this.Name = pName;
        this.Score = 0;
        this.Life = 3;
-       this.Velocity = 2;
-       //preset the propriety of the weapon
-       //this.Gun.setDamage(1);
-       //this.Gun.setRange(5);
-       this.x = 0;
-       this.y = 0;
+       this.Velocity = 4;
+       this.Damaged = false;
+       try {
+           //preset the propriety of the weapon
+           this.Gun = new Weapon(3,2);
+       } catch (ValueErrorException ex) { }
+       this.spawn();
        this.Direction=1;
+       try {
+           this.ActorWalk = new SpriteSheetLoader(8,12,"/GameObject/Actor.png");
+           this.Heart = new ImageIcon(getClass().getResource("/GameObject/Heart.png")).getImage();
+       } catch (IOException | InputErrorException ex) {
+           Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       
    }
    
-    public Image Shadow() throws InputErrorException, IOException{
-       this.ActorWalk = new SpriteSheetLoader(8,12,"/GameObject/Actor.png");
+   public Image Heart() throws InputErrorException, IOException{
+       return this.Heart;
+   }
+   
+   public Image Shadow() throws InputErrorException, IOException{
        return this.ActorWalk.paint(69);
    }
    
-   public Image Walk_static() throws InputErrorException, IOException{
-       this.ActorWalk = new SpriteSheetLoader(8,12,"/GameObject/Actor.png");
+   public Image Walk() throws InputErrorException, IOException{
        while(true){
-       this.Walk();
+       //this.getDirectionWalk();
+       if (this.Damaged==true)
+           return this.ActorWalk.paint(73);
        return this.ActorWalk.paint(this.Direction);
        }
    }
-   
+   /*
    //make player animation
-   public void Walk() throws InputErrorException, IOException{
-       if (this.down==true){
-           this.Direction=1;
-       } if (this.left==true){
-           this.Direction=13;
-       } if (this.up==true){
-           this.Direction=37;
-       } if (this.right==true){
+   private void getDirectionWalk(){
+       if (this.getDirection()>338 && this.getDirection()<23){
            this.Direction=31;
-       } if (this.left==true && this.up==true){
-           this.Direction=16;
-       } if (this.left==true && this.down==true){
-           this.Direction=4;
-       } if (this.right==true && this.up==true){
-           this.Direction=40;
-       } if (this.right==true && this.down==true){
+       } if (this.getDirection()>23 && this.getDirection()<=68){
            this.Direction=28;
+       } if (this.getDirection()>68 && this.getDirection()<=113){
+           this.Direction=1;
+       } if (this.getDirection()>113 && this.getDirection()<=158){
+           this.Direction=4;
+       } if (this.getDirection()>158 && this.getDirection()<=203){
+           this.Direction=13;
+       } if (this.getDirection()>203 && this.getDirection()<=248){
+           this.Direction=16;
+       } if (this.getDirection()>248 && this.getDirection()<=293){
+           this.Direction=37;
+       } if (this.getDirection()>293 && this.getDirection()<=338){
+           this.Direction=40;
        } else {}
    }
    
-   public void spawn(int pX,int pY) throws InputErrorException{
-       if (pX < 0 || pY < 0)
-           throw new InputErrorException("coordinate di spawn non valide");
-       this.x = pX;
-       this.y = pY;
-   }
-   /*
-   private void getDamage(Mob pMob) {
-       if (pMob.Attack()==true)
-           this.Life--;
+   public int getDirection(){
+       double angle;
+       angle = Math.atan2(this.Gun.getX()-this.x,this.Gun.getY()-this.y);
+       System.out.println(Math.toDegrees(angle));
+       return (int)angle;
    }*/
+   
+   public void getDamage(Mob pMob) {
+       if (pMob.Attack()==true) {
+           this.Life--;
+           this.Damaged = true;
+       }else{
+           this.Damaged = false;
+       }
+   }
    
    private void increaseScore(Mob pMob) {
        if (pMob.isDead() == true) {
@@ -90,10 +110,12 @@ public class Player {
    //In this function we will do the required checking and updates
    public void update() throws MalformedURLException {
       this.move();
+      if(this.Damaged==true)
+          this.bounce();
     }
    
    //This function will move the player according to its direction
-   public void move() throws MalformedURLException{
+   private void move() throws MalformedURLException{
       if(left){
          this.x -= this.Velocity;
       }if(right){
@@ -103,6 +125,18 @@ public class Player {
       }if(down){
          this.y += this.Velocity;
       }
+   }
+   
+   public String getLife() {
+       String strng;
+       strng = "" + this.Life;
+       return strng;
+   }
+   
+   public String getScore() {
+       String strng;
+       strng = "" + this.Score;
+       return strng;
    }
    
    //These 4 functions are able to set the direction
@@ -117,6 +151,16 @@ public class Player {
    }
    public void setRight(boolean pRight){
       this.right = pRight;
+   }
+   
+   private void spawn(){
+       this.x = Game.drawing.WIDTH/2; 
+       this.y = Game.drawing.HEIGHT/2;
+   }
+   
+   private void bounce(){
+       this.x += (int)(Math.random()*50);
+       this.y += (int)(Math.random()*50);
    }
    
    //This function will return X as an int.

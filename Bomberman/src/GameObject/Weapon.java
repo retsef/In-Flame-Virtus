@@ -4,13 +4,21 @@ public class Weapon {
 
     protected int Damage;
     protected int Range;
-    public boolean attack;
-    public int x,y;
+    private boolean attack;
+    private int x,y;
     
-    public Weapon() {
-        this.Damage = 0;
-        this.Range = 0;
+    public Weapon() throws ValueErrorException {
+        this(0,0);
     }
+    
+    public Weapon(int pDamage,int pRange) throws ValueErrorException {
+        if (pDamage < 0 || pRange < 0)
+            throw new ValueErrorException("Specifiche dell'arma errate");
+        this.Damage = pDamage;
+        this.Range = pRange;
+        this.attack = false;
+    }
+    
     
     public void setDamage(int pDamage) {
         this.Damage = pDamage;
@@ -21,11 +29,12 @@ public class Weapon {
     }
 
     public void setAttack(boolean pAttack) {
+        //to do action
         this.attack = pAttack;
     }
 
     public int getX() {
-        return x;
+        return  x;
     }
 
     public void setX(int px) {

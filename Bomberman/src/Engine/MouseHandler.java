@@ -1,11 +1,10 @@
 package Engine;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
-public class MouseListener extends MouseAdapter{
+public class MouseHandler extends MouseAdapter{
     
-    public MouseListener() {
+    public MouseHandler() {
     }
 
     @Override
@@ -13,16 +12,15 @@ public class MouseListener extends MouseAdapter{
         switch (pMouse.getButton()) {
             case MouseEvent.BUTTON1:
                 Game.player.Gun.setAttack(true);
+                System.out.println("Attack true");
+                break;
         }
     }
-
+    
     //this function set fire action to the wapon when mouse button is pressed
     @Override
     public void mousePressed(MouseEvent pMouse) {
-        switch (pMouse.getButton()) {
-            case MouseEvent.BUTTON1:
-                Game.player.Gun.setAttack(true);
-        }
+        this.mouseClicked(pMouse);
     }
 
     //that relase the fire action
@@ -31,21 +29,37 @@ public class MouseListener extends MouseAdapter{
         switch (pMouse.getButton()) {
             case MouseEvent.BUTTON1:
                 Game.player.Gun.setAttack(false);
+                break;
         }
     }
-    
+    /*
     public void mousegetX(MouseEvent pMouse) {
         Game.player.Gun.setX(pMouse.getX());
+        System.out.print(pMouse.getX());
     }
     
     public void mousegetY(MouseEvent pMouse) {
         Game.player.Gun.setY(pMouse.getY());
+        System.out.print(pMouse.getY());
     }
-
+    */
     @Override
     public void mouseEntered(MouseEvent pMouse) {
         super.mouseEntered(pMouse); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        mouseMoved(e); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent pMouse) {
+        Game.player.Gun.setX(pMouse.getX());
+        Game.player.Gun.setY(pMouse.getY());
+    }
+    
+    
     
     
 }

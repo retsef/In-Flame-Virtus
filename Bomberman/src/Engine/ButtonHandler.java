@@ -3,9 +3,9 @@ package Engine;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class ButtonListener extends KeyAdapter {
+public class ButtonHandler extends KeyAdapter {
 
-    public ButtonListener() {        
+    public ButtonHandler() {
     }
     
     //This function will be used as soon as a key is released.
@@ -57,7 +57,19 @@ public class ButtonListener extends KeyAdapter {
            case KeyEvent.VK_RIGHT:
                Game.player.setRight(false);
                break;
-        }
-    }
-    
+           //if you use WASD to move
+           case KeyEvent.VK_W:
+               Game.player.setUp(false);
+               break;
+           case KeyEvent.VK_S:
+               Game.player.setDown(false);
+               break;
+           case KeyEvent.VK_A:
+               Game.player.setLeft(false);
+               break;
+           case KeyEvent.VK_D:
+               Game.player.setRight(false);
+               break;
+         }
+     }
 }
