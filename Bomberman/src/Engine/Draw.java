@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -98,8 +99,12 @@ public class Draw{
    }
    
    protected void renderPlayer(Graphics2D g) throws MalformedURLException, IOException, InterruptedException, InputErrorException{
+       
        g.drawImage(Game.player.Shadow(),Game.player.getX()+1,Game.player.getY()+5,40,40, null);
        g.drawImage(Game.player.Walk(),Game.player.getX(),Game.player.getY(),40,40, null);
+       //gun animation
+       g.drawLine(Game.player.getX()+16, Game.player.getY()+16,Game.player.Gun.getX(), Game.player.Gun.getY());
+       
     }
    
    

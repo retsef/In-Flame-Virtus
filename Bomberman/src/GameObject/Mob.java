@@ -1,5 +1,6 @@
 package GameObject;
 
+import Engine.Draw;
 import Engine.Game;
 import Engine.InputErrorException;
 import Engine.SpriteSheetLoader;
@@ -15,22 +16,25 @@ public class Mob {
     private int Velocity;
     private int Point;
     private int x,y;
-    private SpriteSheetLoader MobWalk;
+    private SpriteSheetLoader MobWalk,MobWalk_shadow;
     private int Direction;
     private int TypeMob;
     private boolean up,down,right,left;
     public static int[] Bundle;
     
-    public Mob() throws ValueErrorException, InputErrorException {
+    public Mob() throws ValueErrorException, InputErrorException, IOException {
         this(2,20,2);
     }
     
-    public Mob(int pVelocity, int pPoint, int pLife) throws ValueErrorException, InputErrorException {
+    public Mob(int pVelocity, int pPoint, int pLife) throws ValueErrorException, InputErrorException, IOException {
         this.Velocity = pVelocity;
         this.Point = pPoint;
         this.Life = pLife;
         this.Direction = 0;
         this.spawn();
+        
+        this.MobWalk = new SpriteSheetLoader(8,12,"/GameObject/Mob.png");
+        this.MobWalk_shadow = new SpriteSheetLoader(8,12,"/GameObject/Actor.png");
     }
     
     private void move() {
@@ -72,12 +76,10 @@ public class Mob {
     }
 
     public Image Shadow() throws InputErrorException, IOException{
-       this.MobWalk = new SpriteSheetLoader(8,12,"/GameObject/Actor.png");
-       return this.MobWalk.paint(69);
+       return this.MobWalk_shadow.paint(69);
    }
    
    public Image Walk() throws InputErrorException, IOException{
-       this.MobWalk = new SpriteSheetLoader(8,12,"/GameObject/Mob.png");
        while(true){
        this.getDirectionWalk();
        return this.MobWalk.paint(this.Direction);
@@ -90,7 +92,7 @@ public class Mob {
     
     public boolean Attack() {
         //if ((Game.player.getX()==Game.mob.getX())&&(Game.player.getY()==Game.mob.getY()))
-        if (new Rectangle(Game.player.getX(), Game.player.getY(), 40, 40).intersects(new Rectangle(this.x,this.y,40,40)))
+        if ((Game.player.getX()==this.x)&&(Game.player.getY()==this.y))
             return true;
         else
             return false;

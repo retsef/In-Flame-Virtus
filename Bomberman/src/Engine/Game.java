@@ -25,11 +25,11 @@ public class Game implements Runnable{
     public static Player player;
     
     
-    public Game() throws ValueErrorException, InputErrorException{
+    public Game() throws ValueErrorException, InputErrorException, IOException{
         this("Guy");
     }
     
-    public Game(String pNamePlayer) throws ValueErrorException, InputErrorException{
+    public Game(String pNamePlayer) throws ValueErrorException, InputErrorException, IOException{
         this.drawing = new Draw();
         
         this.player = new Player(pNamePlayer);
@@ -64,6 +64,7 @@ public class Game implements Runnable{
                  this.drawing.render();
              } catch (IOException | InterruptedException ex) { }
              try {
+                 System.gc();
                  Thread.sleep(this.sleep);
              } catch (InterruptedException ex) { }
         }

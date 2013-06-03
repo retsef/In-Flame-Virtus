@@ -57,40 +57,43 @@ public class Player {
    
    public Image Walk() throws InputErrorException, IOException{
        while(true){
-       //this.getDirectionWalk();
+       this.getDirectionWalk();
        if (this.Damaged==true)
            return this.ActorWalk.paint(73);
        return this.ActorWalk.paint(this.Direction);
        }
    }
-   /*
+   
    //make player animation
    private void getDirectionWalk(){
-       if (this.getDirection()>338 && this.getDirection()<23){
-           this.Direction=31;
+       if (this.getDirection()>338 && this.getDirection()<=23){
+           this.Direction=1;
        } if (this.getDirection()>23 && this.getDirection()<=68){
            this.Direction=28;
        } if (this.getDirection()>68 && this.getDirection()<=113){
-           this.Direction=1;
+           this.Direction=25;
        } if (this.getDirection()>113 && this.getDirection()<=158){
-           this.Direction=4;
+           this.Direction=36;
        } if (this.getDirection()>158 && this.getDirection()<=203){
-           this.Direction=13;
+           this.Direction=33;
        } if (this.getDirection()>203 && this.getDirection()<=248){
            this.Direction=16;
        } if (this.getDirection()>248 && this.getDirection()<=293){
-           this.Direction=37;
+           this.Direction=13;
        } if (this.getDirection()>293 && this.getDirection()<=338){
-           this.Direction=40;
+           this.Direction=4;
        } else {}
    }
    
    public int getDirection(){
        double angle;
-       angle = Math.atan2(this.Gun.getX()-this.x,this.Gun.getY()-this.y);
-       System.out.println(Math.toDegrees(angle));
+       angle = Math.toDegrees(Math.atan2(this.Gun.getX()-(this.x+16),this.Gun.getY()-(this.y+16)));
+       if (angle < 0){
+           angle += 360;
+       }
+       System.out.println(angle);
        return (int)angle;
-   }*/
+   }
    
    public void getDamage(Mob pMob) {
        if (pMob.Attack()==true) {

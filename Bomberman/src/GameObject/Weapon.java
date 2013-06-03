@@ -1,11 +1,15 @@
 package GameObject;
 
+import Engine.Game;
+import java.awt.geom.Line2D;
+
 public class Weapon {
 
     protected int Damage;
     protected int Range;
     private boolean attack;
     private int x,y;
+    private Line2D target;
     
     public Weapon() throws ValueErrorException {
         this(0,0);
@@ -17,6 +21,7 @@ public class Weapon {
         this.Damage = pDamage;
         this.Range = pRange;
         this.attack = false;
+        this.target = new Line2D.Float();
     }
     
     
