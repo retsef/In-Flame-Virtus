@@ -1,6 +1,5 @@
 package GameObject;
 
-import Engine.Draw;
 import Engine.Game;
 import Engine.InputErrorException;
 import Engine.SpriteSheetLoader;
@@ -12,15 +11,14 @@ import java.net.MalformedURLException;
 
 public class Mob {
     
-    private int Life;
-    private int Velocity;
-    private int Point;
     private int x,y;
+    private int width,height;
+    private int Life,Velocity,Point,Direction;
+    private int Direction_type,type;
     private SpriteSheetLoader MobWalk,MobWalk_shadow;
-    private int Direction;
-    private int TypeMob;
     private boolean up,down,right,left;
-    public static int[] Bundle;
+    public Rectangle Body;
+    private boolean isMoving;
     
     public Mob() throws ValueErrorException, InputErrorException, IOException {
         this(2,20,2);
@@ -31,46 +29,61 @@ public class Mob {
         this.Point = pPoint;
         this.Life = pLife;
         this.Direction = 0;
+        this.type = 0;
+        this.isMoving = true;
+        this.height = 40;
+        this.width = 40;
         this.spawn();
+        this.Body = new Rectangle(this.x, this.y, this.width, this.height);
         
-        this.MobWalk = new SpriteSheetLoader(8,12,"/GameObject/Mob.png");
-        this.MobWalk_shadow = new SpriteSheetLoader(8,12,"/GameObject/Actor.png");
+        this.MobWalk = new SpriteSheetLoader(8,12,"/images/Mob.png");
+        this.MobWalk_shadow = new SpriteSheetLoader(8,12,"/images/Actor.png");
     }
     
     private void move() {
+        if(this.isMoving==true){
         //detect the position of the player and try to reatch
         if(Game.player.getX() < this.x){
         this.x--;
         this.left = true;
         this.right = false;
+        this.up = false;
+        this.down = false;
         }else if(Game.player.getX() > this.x){
         this.x++;
         this.right = true;
         this.left = false;
+        this.up = false;
+        this.down = false;
         }
         if(Game.player.getY() < this.y){
         this.y--;
         this.up = true;
         this.down = false;
+        this.left = false;
+        this.right = false;
         }else if(Game.player.getY() > this.y){
         this.y++;
         this.down = true;
         this.up = false;
+        this.left = false;
+        this.right = false;
         }
+    } else {}
     }
     
     public void update() throws MalformedURLException {
       this.move();
     }
     
-    public void getDirectionWalk() {
-        if(Game.player.getY()==this.y && this.down==true){
+    private void getDirectionWalk() {
+        if(this.down==true){
             this.Direction = 1;
-        }else if(Game.player.getX()==this.x && this.left==true){
+        }if(this.left==true){
             this.Direction = 13;
-        }else if (Game.player.getX()==this.x && this.right==true){
+        }if (this.right==true){
             this.Direction = 25;
-        }else if (Game.player.getY()==this.y && this.up==true){
+        }if (this.up==true){
             this.Direction = 37;
         }
     }
@@ -82,17 +95,27 @@ public class Mob {
    public Image Walk() throws InputErrorException, IOException{
        while(true){
        this.getDirectionWalk();
-       return this.MobWalk.paint(this.Direction);
+       this.Direction_type = (this.type + this.Direction);
+       return this.MobWalk.paint(this.Direction_type);
        }
    }
     
     public void Damaged() {
         this.Life--;
+        if (this.isDead()==true){
+            this.spawn();
+        }
+    }
+    
+    private boolean isNearPlayer() {
+        if(this.Body.intersects(Game.player.Body))
+            return true;
+        else
+            return false;
     }
     
     public boolean Attack() {
-        //if ((Game.player.getX()==Game.mob.getX())&&(Game.player.getY()==Game.mob.getY()))
-        if ((Game.player.getX()==this.x)&&(Game.player.getY()==this.y))
+        if (this.isNearPlayer()==true)
             return true;
         else
             return false;
@@ -104,14 +127,18 @@ public class Mob {
 
     public boolean isDead() {
         if (this.Life > 0)
-            return true;
-        else
             return false;
+        else
+            return true;
     }
     
-    private final void spawn(){
-        this.x = (int)(Math.random() * Game.drawing.WIDTH);
-        this.y = (int)(Math.random() * Game.drawing.HEIGHT);
+    private void spawn(){
+        this.x = (int)(Math.random() * Game.WIDTH);
+        this.y = (int)(Math.random() * Game.HEIGTH);
+        
+        int phope = (int)(Math.random() * 4);
+        this.type = 3*(phope);
+        int ptype = (int)(Math.random()*2);
     }
     
     public int getX() {
@@ -129,10 +156,15 @@ public class Mob {
     public void setY(int py) {
         this.y = py;
     }
+    
+    public void setMoving(boolean pmove) {
+        this.isMoving = pmove;
+    }
 
     public void Draw(Graphics2D g) throws InputErrorException, IOException {
-        g.drawImage(this.Shadow(),this.getX()+1,this.getY()+5,40,40,null);
-        g.drawImage(this.Walk(),this.getX(),this.getY(),40,40,null);
+        
+        g.drawImage(this.Shadow(),this.getX()+1,this.getY()+5,this.width,this.height,null);
+        g.drawImage(this.Walk(),this.getX(),this.getY(),this.width,this.height,null);
     }
     
 }

@@ -6,6 +6,8 @@ import GameObject.ValueErrorException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -15,10 +17,14 @@ import java.util.ArrayList;
 
 public class Game implements Runnable{
     
-    private int sleep = 10;
+    private int sleep = 20;
     private Thread thread;
+    private Meccanics Meccanic;
     private boolean isStart;
-    public static final int MAXMob = 15;
+    public static final int MAXMob = 10;
+    
+    public static final int WIDTH = 800;
+    public static final int HEIGTH = 600;
     
     public static Draw drawing;
     public static ArrayList<Mob> BundleMob;
@@ -30,17 +36,17 @@ public class Game implements Runnable{
     }
     
     public Game(String pNamePlayer) throws ValueErrorException, InputErrorException, IOException{
-        this.drawing = new Draw();
         
-        this.player = new Player(pNamePlayer);
+        Game.player = new Player(pNamePlayer);
+        Game.drawing = new Draw(Game.WIDTH,Game.HEIGTH,"Shot them all!");
         
-        this.BundleMob = new ArrayList<Mob>();
-        for (int i = 0; i < this.MAXMob; i++){
-        this.BundleMob.add(new Mob());
+        Game.BundleMob = new ArrayList<>();
+        for (int i = 0; i < Game.MAXMob; i++){
+            Game.BundleMob.add(new Mob());
         }
         
         this.isStart = false;
-         
+        this.Meccanic = new Meccanics();
     }
     
     /**
@@ -50,18 +56,25 @@ public class Game implements Runnable{
     public void run(){
     while(true){
              try {
-                 this.drawing.setFrameVisible(true);
-                 this.player.update();
+                 Game.drawing.setFrameVisible(true);
+                 Game.player.update();
                  
-                 for(int i = 0; i < this.BundleMob.size(); i++)
+                 for(int i = 0; i < Game.BundleMob.size(); i++)
                     {
-                        this.BundleMob.get(i).update();
-                        this.player.getDamage(this.BundleMob.get(i));
+                        
+                        Game.BundleMob.get(i).update();
+                        this.Meccanic.EnvironmentAction();
+                        this.Meccanic.isMobInteresect();
+                        
                     }
                  
-             } catch (MalformedURLException ex) { }
+             } catch (MalformedURLException ex) { } catch (IOException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InputErrorException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
              try {
-                 this.drawing.render();
+                 Game.drawing.render();
              } catch (IOException | InterruptedException ex) { }
              try {
                  System.gc();
@@ -88,7 +101,7 @@ public class Game implements Runnable{
             if (this.thread != null && this.thread.isAlive()) {
                 this.thread.interrupt();
                 this.iStart(false);
-                this.drawing.setFrameVisible(false);
+                Game.drawing.setFrameVisible(false);
             }
         }
         

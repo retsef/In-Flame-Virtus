@@ -12,7 +12,6 @@ public class MouseHandler extends MouseAdapter{
         switch (pMouse.getButton()) {
             case MouseEvent.BUTTON1:
                 Game.player.Gun.setAttack(true);
-                System.out.println("Attack true");
                 break;
         }
     }
@@ -32,17 +31,7 @@ public class MouseHandler extends MouseAdapter{
                 break;
         }
     }
-    /*
-    public void mousegetX(MouseEvent pMouse) {
-        Game.player.Gun.setX(pMouse.getX());
-        System.out.print(pMouse.getX());
-    }
     
-    public void mousegetY(MouseEvent pMouse) {
-        Game.player.Gun.setY(pMouse.getY());
-        System.out.print(pMouse.getY());
-    }
-    */
     @Override
     public void mouseEntered(MouseEvent pMouse) {
         super.mouseEntered(pMouse); //To change body of generated methods, choose Tools | Templates.

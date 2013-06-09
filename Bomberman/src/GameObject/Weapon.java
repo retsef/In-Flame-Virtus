@@ -1,43 +1,45 @@
 package GameObject;
 
-import Engine.Game;
-import java.awt.geom.Line2D;
+import java.awt.Point;
 
 public class Weapon {
 
-    protected int Damage;
-    protected int Range;
+    private int Damage;
     private boolean attack;
     private int x,y;
-    private Line2D target;
+    private Point target;
     
     public Weapon() throws ValueErrorException {
-        this(0,0);
+        this(1);
     }
     
-    public Weapon(int pDamage,int pRange) throws ValueErrorException {
-        if (pDamage < 0 || pRange < 0)
+    public Weapon(int pDamage) throws ValueErrorException {
+        if (pDamage < 0)
             throw new ValueErrorException("Specifiche dell'arma errate");
         this.Damage = pDamage;
-        this.Range = pRange;
         this.attack = false;
-        this.target = new Line2D.Float();
     }
-    
     
     public void setDamage(int pDamage) {
         this.Damage = pDamage;
     }
 
-    public void setRange(int pRange) {
-        this.Range = pRange;
-    }
-
     public void setAttack(boolean pAttack) {
-        //to do action
         this.attack = pAttack;
     }
+    
+    public boolean getAttack() {
+        return this.attack;
+    }
 
+    public Point getPoint() {
+        return this.target;
+    }
+    
+    public void update() {
+        this.target = new Point(this.getX()+14,this.getY()+14);
+    }
+    
     public int getX() {
         return  x;
     }
