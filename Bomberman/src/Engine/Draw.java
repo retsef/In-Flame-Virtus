@@ -1,5 +1,6 @@
 package Engine;
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 import java.awt.Canvas;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -87,7 +88,7 @@ public class Draw{
       //Nascondo il cursore
       this.canvas.setCursor(this.HIDDEN_CURSOR);
    
-      this.Scope = new Rectangle(Game.player.Gun.getX(),Game.player.Gun.getY(),28,28);
+      this.Scope = new Rectangle((int)Instances.player.Gun.getPoint().getX(),(int)Instances.player.Gun.getPoint().getY(),28,28);
        try {
            this.Scope_img = ImageIO.read(getClass().getResource("/images/scope.png"));
        } catch (IOException ex) {
@@ -102,10 +103,10 @@ public class Draw{
       g.drawImage(this.Background, 0, 0, null);
        try {
            //render life and score status
-           g.drawImage(Game.player.Heart(),this.WIDTH-35,5,24,24,null);
+           g.drawImage(Instances.player.Heart(),this.WIDTH-35,5,24,24,null);
            g.setFont(this.myFont);
-           g.drawString(Game.player.getLife(),this.WIDTH-26,22);
-           g.drawString(Game.player.getScore(),this.WIDTH-50,this.HEIGHT-30);
+           g.drawString(Instances.player.getLife(),this.WIDTH-26,22);
+           g.drawString(Instances.player.getScore(),this.WIDTH-50,this.HEIGHT-30);
            
        } catch (InputErrorException ex) { }
        try {
@@ -120,20 +121,20 @@ public class Draw{
    }
    
    protected void renderPlayer(Graphics2D g) throws MalformedURLException, IOException, InterruptedException, InputErrorException{
-       g.drawImage(Game.player.Shadow(),Game.player.getX()+1,Game.player.getY()+5,Game.player.getwidth(),Game.player.getheight(), null);
-       g.drawImage(Game.player.Walk(),Game.player.getX(),Game.player.getY(),Game.player.getwidth(),Game.player.getheight(), null);
+       g.drawImage(Instances.player.Shadow(),Instances.player.getX()+1,Instances.player.getY()+5,Instances.player.getwidth(),Instances.player.getheight(), null);
+       g.drawImage(Instances.player.Walk(),Instances.player.getX(),Instances.player.getY(),Instances.player.getwidth(),Instances.player.getheight(), null);
        
     }
    
    protected void renderScope(Graphics2D g) throws MalformedURLException, IOException, InterruptedException, InputErrorException {
-       g.drawImage(this.Scope_img,Game.player.Gun.getX(),Game.player.Gun.getY(),28,28,null);
+       g.drawImage(this.Scope_img,(int)Instances.player.Gun.getPoint().getX(),(int)Instances.player.Gun.getPoint().getY(),28,28,null);
    }
    
    protected void renderMob(Graphics2D g) throws MalformedURLException, IOException, InterruptedException, InputErrorException{
        // Here we draw all the Mob.
-        for(int i = 0; i < Game.BundleMob.size(); i++)
+        for(int l = 0; l < Instances.BundleMob.size(); l++)
         {
-            Game.BundleMob.get(i).Draw(g);
+            Instances.BundleMob.get(l).Draw(g);
         }
     }
    

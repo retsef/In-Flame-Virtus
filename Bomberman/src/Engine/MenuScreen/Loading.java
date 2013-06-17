@@ -1,6 +1,5 @@
 package Engine.MenuScreen;
 
-import Engine.MenuScreen.Game_Menu;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Level;

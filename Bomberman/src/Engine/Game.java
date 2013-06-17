@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 public class Game implements Runnable{
     
-    private int sleep = 20;
+    private int sleep = 10;
     private Thread thread;
     private Meccanics Meccanic;
     private boolean isStart;
@@ -26,9 +26,7 @@ public class Game implements Runnable{
     public static final int WIDTH = 800;
     public static final int HEIGTH = 600;
     
-    public static Draw drawing;
-    public static ArrayList<Mob> BundleMob;
-    public static Player player;
+    
     
     
     public Game() throws ValueErrorException, InputErrorException, IOException{
@@ -37,12 +35,12 @@ public class Game implements Runnable{
     
     public Game(String pNamePlayer) throws ValueErrorException, InputErrorException, IOException{
         
-        Game.player = new Player(pNamePlayer);
-        Game.drawing = new Draw(Game.WIDTH,Game.HEIGTH,"Shot them all!");
+        Instances.player = new Player(pNamePlayer);
+        Instances.drawing = new Draw(Game.WIDTH,Game.HEIGTH,"Shot them all!");
         
-        Game.BundleMob = new ArrayList<>();
-        for (int i = 0; i < Game.MAXMob; i++){
-            Game.BundleMob.add(new Mob());
+        Instances.BundleMob = new ArrayList<>();
+        for (int i = 0; i < this.MAXMob; i++){
+            Instances.BundleMob.add(new Mob());
         }
         
         this.isStart = false;
@@ -56,15 +54,15 @@ public class Game implements Runnable{
     public void run(){
     while(true){
              try {
-                 Game.drawing.setFrameVisible(true);
-                 Game.player.update();
+                 Instances.drawing.setFrameVisible(true);
+                 Instances.player.update();
                  
-                 for(int i = 0; i < Game.BundleMob.size(); i++)
+                 for(int i = 0; i < Instances.BundleMob.size(); i++)
                     {
                         
-                        Game.BundleMob.get(i).update();
-                        this.Meccanic.EnvironmentAction();
-                        this.Meccanic.isMobInteresect();
+                        Instances.BundleMob.get(i).update();
+                        this.Meccanic.EnvironmentAction(Instances.BundleMob,Instances.player);
+                        this.Meccanic.isMobInteresect(Instances.BundleMob);
                         
                     }
                  
@@ -74,7 +72,7 @@ public class Game implements Runnable{
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
              try {
-                 Game.drawing.render();
+                 Instances.drawing.render();
              } catch (IOException | InterruptedException ex) { }
              try {
                  System.gc();
@@ -88,7 +86,6 @@ public class Game implements Runnable{
          */
         public void start() {
             stop();
-            
             this.thread = new Thread(this);
             this.thread.start();
             this.iStart(true);
@@ -101,7 +98,7 @@ public class Game implements Runnable{
             if (this.thread != null && this.thread.isAlive()) {
                 this.thread.interrupt();
                 this.iStart(false);
-                Game.drawing.setFrameVisible(false);
+                Instances.drawing.setFrameVisible(false);
             }
         }
         

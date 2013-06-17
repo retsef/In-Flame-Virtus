@@ -1,30 +1,33 @@
 package Engine;
 
+import GameObject.Mob;
+import GameObject.Player;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Meccanics {
+    
+    private int e,p,h;
     
     public Meccanics(){
     }
     
-    public void isMobInteresect() {
-        for (int e=0;e==Game.BundleMob.size();e++){
-            for (int p=0;p==Game.BundleMob.size();p++){
+    public void isMobInteresect(ArrayList<Mob> pMobClan) {
+            for (p=0;p==pMobClan.size();p++){
                 
-                if(Game.BundleMob.get(e).Body.intersects(Game.BundleMob.get(p).Body)){
+                if(pMobClan.get(e).Body.intersects(pMobClan.get(p).Body)){
                     System.out.println("p="+p+" stopped from e="+e);
-                    Game.BundleMob.get(e).setMoving(false);
+                    pMobClan.get(e).setMoving(false);
                 } else {
-                    Game.BundleMob.get(e).setMoving(true);
+                    pMobClan.get(e).setMoving(true);
                 }
             }     
         }
-    }
     
-    public void EnvironmentAction() throws IOException, InputErrorException {
-        for (int h=0;h<Game.BundleMob.size();h++){
-            Game.player.DamageMob(Game.BundleMob.get(h));
-            Game.player.getDamage(Game.BundleMob.get(h));
+    public void EnvironmentAction(ArrayList<Mob> pMobClan, Player pPlayer) throws IOException, InputErrorException {
+        for (h=0;h<pMobClan.size();h++){
+            pPlayer.Damage_a_Mob(pMobClan.get(h));
+            pPlayer.get_Damage_from(pMobClan.get(h));
         }
     }
     

@@ -4,7 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class ButtonHandler extends KeyAdapter {
-
+    
     public ButtonHandler() {
     }
     
@@ -14,29 +14,29 @@ public class ButtonHandler extends KeyAdapter {
         switch (pkey.getKeyCode()) {
            //if you use arrowkey to move
            case KeyEvent.VK_UP:
-               Game.player.setUp(true);
+               Instances.player.setUp(true);
                break;
            case KeyEvent.VK_DOWN:
-               Game.player.setDown(true);
+               Instances.player.setDown(true);
                break;
            case KeyEvent.VK_LEFT:
-               Game.player.setLeft(true);
+               Instances.player.setLeft(true);
                break;
            case KeyEvent.VK_RIGHT:
-               Game.player.setRight(true);
+               Instances.player.setRight(true);
                break;
            //if you use WASD to move
            case KeyEvent.VK_W:
-               Game.player.setUp(true);
+               Instances.player.setUp(true);
                break;
            case KeyEvent.VK_S:
-               Game.player.setDown(true);
+               Instances.player.setDown(true);
                break;
            case KeyEvent.VK_A:
-               Game.player.setLeft(true);
+               Instances.player.setLeft(true);
                break;
            case KeyEvent.VK_D:
-               Game.player.setRight(true);
+               Instances.player.setRight(true);
                break;
          }
     }   
@@ -46,29 +46,29 @@ public class ButtonHandler extends KeyAdapter {
     public void keyReleased(KeyEvent pkey) {
         switch (pkey.getKeyCode()) {
            case KeyEvent.VK_UP:
-               Game.player.setUp(false);
+               Instances.player.setUp(false);
                break;
            case KeyEvent.VK_DOWN:
-               Game.player.setDown(false);
+               Instances.player.setDown(false);
                break;
            case KeyEvent.VK_LEFT:
-               Game.player.setLeft(false);
+               Instances.player.setLeft(false);
                break;
            case KeyEvent.VK_RIGHT:
-               Game.player.setRight(false);
+               Instances.player.setRight(false);
                break;
            //if you use WASD to move
            case KeyEvent.VK_W:
-               Game.player.setUp(false);
+               Instances.player.setUp(false);
                break;
            case KeyEvent.VK_S:
-               Game.player.setDown(false);
+               Instances.player.setDown(false);
                break;
            case KeyEvent.VK_A:
-               Game.player.setLeft(false);
+               Instances.player.setLeft(false);
                break;
            case KeyEvent.VK_D:
-               Game.player.setRight(false);
+               Instances.player.setRight(false);
                break;
          }
      }

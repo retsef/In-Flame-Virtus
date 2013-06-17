@@ -6,7 +6,6 @@ public class Weapon {
 
     private int Damage;
     private boolean attack;
-    private int x,y;
     private Point target;
     
     public Weapon() throws ValueErrorException {
@@ -18,6 +17,7 @@ public class Weapon {
             throw new ValueErrorException("Specifiche dell'arma errate");
         this.Damage = pDamage;
         this.attack = false;
+        this.target = new Point(0,0);
     }
     
     public void setDamage(int pDamage) {
@@ -36,24 +36,8 @@ public class Weapon {
         return this.target;
     }
     
-    public void update() {
-        this.target = new Point(this.getX()+14,this.getY()+14);
-    }
-    
-    public int getX() {
-        return  x;
-    }
-
-    public void setX(int px) {
-        this.x = px;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int py) {
-        this.y = py;
+    public void setTarget(Point pPoint) {
+        this.target = pPoint;
     }
     
 }

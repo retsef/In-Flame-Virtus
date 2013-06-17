@@ -3,8 +3,7 @@ package GameObject;
 import Engine.Game;
 import Engine.InputErrorException;
 import Engine.SpriteSheetLoader;
-import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
@@ -23,7 +22,8 @@ public class Player {
    private SpriteSheetLoader ActorWalk;
    private Image Heart;
    public Rectangle Body;
-   
+   private int Ap;
+   private Animation_player animation_thread;
    
    public Player (String pName){
        this.Name = pName;
@@ -34,21 +34,27 @@ public class Player {
        this.isMoving = false;
        this.height = 40;
        this.width = 40;
-       this.spawn();
-       this.Body = new Rectangle(this.x, this.y, this.width, this.height);
+       this.x = 0;
+       this.y = 0;
        
+       this.Direction=1;
+       this.Ap = 0;
+       
+       this.Body = new Rectangle(this.x, this.y, this.width, this.height);
+       this.animation_thread = new Animation_player();
        try {
            //preset the propriety of the weapon
            this.Gun = new Weapon(1);
        } catch (ValueErrorException ex) { }
        
-       this.Direction=1;
        try {
            this.ActorWalk = new SpriteSheetLoader(8,12,"/images/Actor.png");
            this.Heart = new ImageIcon(getClass().getResource("/images/Heart.png")).getImage();
        } catch (IOException | InputErrorException ex) {
            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
        }
+       
+       this.spawn();
    }
    
    public Image Heart() throws InputErrorException, IOException{
@@ -64,8 +70,21 @@ public class Player {
        this.getDirectionWalk();
        if (this.Damaged==true)
            return this.ActorWalk.paint(73);
+       this.animation_thread.start();
        return this.ActorWalk.paint(this.Direction);
        }
+   }
+   
+   public void moving() {
+       if(this.isMoving != false){
+            if (this.Ap<1) {
+               this.Ap += 1;
+             } else if (this.Ap>=1) {
+               this.Ap -= 2;
+             }
+               this.Direction += this.Ap;
+            //System.out.println(this.Direction);
+            } else {}
    }
    
    //make player rotation animation
@@ -91,23 +110,23 @@ public class Player {
    
    public int getDirection(){
        double angle;
-       angle = Math.toDegrees(Math.atan2(this.Gun.getX()-(this.x+16),this.Gun.getY()-(this.y+16)));
+       angle = Math.toDegrees(Math.atan2(this.Gun.getPoint().getX()-(this.x+16),this.Gun.getPoint().getY()-(this.y+16)));
        if (angle < 0){
            angle += 360;
        }
        return (int)angle;
    }
    
-   public void getDamage(Mob pMob) {
+   public void get_Damage_from(Mob pMob) {
        if (pMob.Attack()==true) {
            this.Life--;
            this.bounce();
        }else{ }
    }
    
-   public void DamageMob(Mob pMob) throws IOException, InputErrorException {
-       System.out.println(this.Gun.getPoint());
-       
+   public void Damage_a_Mob(Mob pMob) throws IOException, InputErrorException {
+       if (this.Body.contains(this.Gun.getPoint()))
+           System.out.println(this.Gun.getPoint());
        if(this.Gun.getAttack()==true && pMob.Body.contains(this.Gun.getPoint())){
            pMob.Damaged();
            this.increaseScore(pMob);
@@ -123,25 +142,37 @@ public class Player {
    //In this function we will do the required checking and updates
    public void update() throws MalformedURLException {
       this.move();
-      this.Gun.update();
+      this.Body = new Rectangle(this.x, this.y, this.width, this.height);
     }
    
    //This function will move the player according to its direction
+   //up-down e left-rigth separati per i movimenti diagonali
    private void move() throws MalformedURLException{
       if(left){
          this.x -= this.Velocity;
-         this.isMoving=true;
-      }if(right){
+            if (this.isMoving!=true){
+                this.isMoving = true;}
+      }else if(right){
          this.x += this.Velocity;
-         this.isMoving=true;
-      }if(up){
-         this.y -= this.Velocity;
-         this.isMoving=true;
-      }if(down){
-         this.y += this.Velocity;
-         this.isMoving=true;
+         if (this.isMoving!=true){
+             this.isMoving = true;}
       }else{
-          this.isMoving=false;
+          if (this.isMoving!=false){
+              this.isMoving = false;}
+      }
+      
+      if(up){
+         this.y -= this.Velocity;
+            if (this.isMoving!=true){
+                this.isMoving = true;}
+         
+      }else if(down){
+         this.y += this.Velocity;
+            if (this.isMoving!=true){
+                this.isMoving = true;}
+      }else{
+          if (this.isMoving!=false){
+              this.isMoving = false;}
       }
    }
    
@@ -198,9 +229,43 @@ public class Player {
         return this.width;
     }
    
-   
-   private class animation {
-       
-   }
+   /**
+     * Thread dell' animazione
+     */
+    private class Animation_player implements Runnable {
+
+        private int sleep = 7000;
+        private Thread thread;
+
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    moving();
+                    Thread.sleep(this.sleep);
+                }
+            } catch (InterruptedException ex) {
+            }
+        }
+
+        /**
+         * Avvia il thread
+         */
+        public void start() {
+            stop();
+            thread = new Thread(this);
+            thread.start();
+        }
+
+        /**
+         * Ferma il thread
+         */
+        public void stop() {
+            if (thread != null && thread.isAlive()) {
+                thread.interrupt();
+            }
+        }
+    }
+    
 }
 
