@@ -51,7 +51,7 @@ public class SpriteSheetLoader {
     */
    public BufferedImage paint(int pi) throws InputErrorException {
        if (pi < 0 || pi > (this.rows * this.columns))
-           throw new InputErrorException("la sotto immagine a cui cerchi di accedere non esiste");     
+           throw new InputErrorException("la sotto immagine a cui cerchi di accedere non esiste: n" + pi);     
        return this.sprites[pi];
    }
     /**

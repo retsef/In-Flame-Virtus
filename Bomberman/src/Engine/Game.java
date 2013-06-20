@@ -21,10 +21,10 @@ public class Game implements Runnable{
     private Thread thread;
     private Meccanics Meccanic;
     private boolean isStart;
-    public static final int MAXMob = 10;
+    public static final int MAXMob = 20;
     
-    public static final int WIDTH = 800;
-    public static final int HEIGTH = 600;
+    public static final int WIDTH = 1240;
+    public static final int HEIGTH = 700;
     
     
     

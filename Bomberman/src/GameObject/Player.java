@@ -17,7 +17,7 @@ public class Player {
    private boolean  left, right, up, down;
    private String Name;
    private int Score,Life,Velocity,Direction;
-   private boolean Damaged,isMoving;
+   private boolean isDamaged,isMoving;
    public Weapon Gun;
    private SpriteSheetLoader ActorWalk;
    private Image Heart;
@@ -30,7 +30,7 @@ public class Player {
        this.Score = 0;
        this.Life = 15;
        this.Velocity = 4;
-       this.Damaged = false;
+       this.isDamaged = false;
        this.isMoving = false;
        this.height = 40;
        this.width = 40;
@@ -67,10 +67,11 @@ public class Player {
    
    public Image Walk() throws InputErrorException, IOException{
        while(true){
-       this.getDirectionWalk();
-       if (this.Damaged==true)
-           return this.ActorWalk.paint(73);
        this.animation_thread.start();
+       //this.getDirectionWalk();
+       if (this.isDamaged==true) {
+           return this.ActorWalk.paint(73);
+       }
        return this.ActorWalk.paint(this.Direction);
        }
    }
@@ -80,10 +81,11 @@ public class Player {
             if (this.Ap<1) {
                this.Ap += 1;
              } else if (this.Ap>=1) {
-               this.Ap -= 2;
+               this.Ap -= 3;
              }
+               //System.out.println(this.Ap);
                this.Direction += this.Ap;
-            //System.out.println(this.Direction);
+               System.out.println(this.Direction);
             } else {}
    }
    
@@ -118,15 +120,13 @@ public class Player {
    }
    
    public void get_Damage_from(Mob pMob) {
-       if (pMob.Attack()==true) {
+       if (pMob.Attack() == true) {
            this.Life--;
            this.bounce();
        }else{ }
    }
    
    public void Damage_a_Mob(Mob pMob) throws IOException, InputErrorException {
-       if (this.Body.contains(this.Gun.getPoint()))
-           System.out.println(this.Gun.getPoint());
        if(this.Gun.getAttack()==true && pMob.Body.contains(this.Gun.getPoint())){
            pMob.Damaged();
            this.increaseScore(pMob);
@@ -150,29 +150,22 @@ public class Player {
    private void move() throws MalformedURLException{
       if(left){
          this.x -= this.Velocity;
-            if (this.isMoving!=true){
-                this.isMoving = true;}
+         this.isMoving=true;
       }else if(right){
          this.x += this.Velocity;
-         if (this.isMoving!=true){
-             this.isMoving = true;}
+         this.isMoving=true;
       }else{
-          if (this.isMoving!=false){
-              this.isMoving = false;}
+         this.isMoving=false;
       }
       
       if(up){
          this.y -= this.Velocity;
-            if (this.isMoving!=true){
-                this.isMoving = true;}
-         
+         this.isMoving=true;
       }else if(down){
          this.y += this.Velocity;
-            if (this.isMoving!=true){
-                this.isMoving = true;}
+         this.isMoving=true;
       }else{
-          if (this.isMoving!=false){
-              this.isMoving = false;}
+         this.isMoving=false;
       }
    }
    
@@ -208,8 +201,8 @@ public class Player {
    }
    
    private void bounce(){
-       this.x += (int)(Math.random()*50);
-       this.y += (int)(Math.random()*50);
+       this.x += (int)(Math.random()*3);
+       this.y += (int)(Math.random()*3);
    }
    
    //This function will return X as an int.

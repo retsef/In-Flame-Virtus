@@ -1,15 +1,6 @@
 package Engine;
 
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
-import java.awt.Canvas;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;

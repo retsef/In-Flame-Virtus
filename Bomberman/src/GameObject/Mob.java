@@ -130,10 +130,11 @@ public class Mob {
     }
     
     public boolean Attack() {
-        if (this.isIntersectWithPlayer==true)
+        if (this.isIntersectWithPlayer==true) {
             return true;
-        else
+        }else{
             return false;
+        }
     }
     
     public int getPoint() {
