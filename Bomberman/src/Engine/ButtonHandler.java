@@ -38,6 +38,9 @@ public class ButtonHandler extends KeyAdapter {
            case KeyEvent.VK_D:
                Instances.player.setRight(true);
                break;
+           case KeyEvent.VK_ESCAPE: //esc button
+               Instances.game.stop();
+               break;
          }
     }   
     
@@ -69,6 +72,9 @@ public class ButtonHandler extends KeyAdapter {
                break;
            case KeyEvent.VK_D:
                Instances.player.setRight(false);
+               break;
+           case KeyEvent.VK_ESCAPE: //esc button
+               Instances.game.stop();
                break;
          }
      }

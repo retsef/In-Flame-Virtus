@@ -14,7 +14,7 @@ public class Mob {
     
     private int x,y;
     private int width,height;
-    private int Life,Velocity,Point,Direction;
+    private int Life,Velocity,Point,Direction,Damage;
     private int Direction_type,type;
     private SpriteSheetLoader MobWalk,MobWalk_shadow;
     private boolean up,down,right,left;
@@ -25,13 +25,14 @@ public class Mob {
     private boolean isIntersectWithPlayer;
     
     public Mob() throws ValueErrorException, InputErrorException, IOException {
-        this(2,20,2);
+        this(2,20,2,1);
     }
     
-    public Mob(int pVelocity, int pPoint, int pLife) throws ValueErrorException, InputErrorException, IOException {
+    public Mob(int pVelocity, int pPoint, int pLife, int pDamage) throws ValueErrorException, InputErrorException, IOException {
         this.Velocity = pVelocity;
         this.Point = pPoint;
         this.Life = pLife;
+        this.Damage = pDamage;
         this.Direction = 0;
         this.type = 0;
         this.height = 40;
@@ -42,7 +43,7 @@ public class Mob {
         this.isMoving = true;
         
         this.Body = new Rectangle(this.x, this.y, this.width, this.height);
-        //this.animation_thread = new Animation_mob();
+        this.animation_thread = new Animation_mob();
         
         this.MobWalk = new SpriteSheetLoader(8,12,"/images/Mob.png");
         this.MobWalk_shadow = new SpriteSheetLoader(8,12,"/images/Actor.png");
@@ -100,20 +101,24 @@ public class Mob {
         }
     }
 
+    public int getDamage() {
+        return this.Damage;
+    }
+    
     public Image Shadow() throws InputErrorException, IOException{
        return this.MobWalk_shadow.paint(69);
    }
    
-   public Image Walk() throws InputErrorException, IOException{
-       while(true){
-       this.getDirectionWalk();
-       
-       this.Direction_type = (this.type + this.Direction);
-       
-       //this.animation_thread.start();
-       return this.MobWalk.paint(this.Direction_type);
-       }
-   }
+    public Image Walk() throws InputErrorException, IOException{
+        while(true){
+        this.getDirectionWalk();
+
+        this.Direction_type = (this.type + this.Direction);
+        
+        this.animation_thread.start();
+        return this.MobWalk.paint(this.Direction_type);
+        }
+    }
     
     public void Damaged() {
         this.Life--;
@@ -167,6 +172,7 @@ public class Mob {
     public void setMoving(boolean pmove) {
         this.isMoving = pmove;
     }
+    
     public void moving() {
        if(this.isMoving != false){
             if (this.Am<1) {
@@ -209,7 +215,7 @@ public class Mob {
          */
         public void start() {
             stop();
-            thread = new Thread(this);
+            thread = new Thread(this,"Animation Walk-Mob");
             thread.start();
         }
 

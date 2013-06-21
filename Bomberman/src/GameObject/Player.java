@@ -18,7 +18,7 @@ public class Player {
    private String Name;
    private int Score,Life,Velocity,Direction;
    private boolean isDamaged,isMoving;
-   public Weapon Gun;
+   public Weapon Glove;
    private SpriteSheetLoader ActorWalk;
    private Image Heart;
    public Rectangle Body;
@@ -28,7 +28,7 @@ public class Player {
    public Player (String pName){
        this.Name = pName;
        this.Score = 0;
-       this.Life = 15;
+       this.Life = 30;
        this.Velocity = 4;
        this.isDamaged = false;
        this.isMoving = false;
@@ -44,7 +44,7 @@ public class Player {
        this.animation_thread = new Animation_player();
        try {
            //preset the propriety of the weapon
-           this.Gun = new Weapon(1);
+           this.Glove = new Weapon(1);
        } catch (ValueErrorException ex) { }
        
        try {
@@ -68,7 +68,7 @@ public class Player {
    public Image Walk() throws InputErrorException, IOException{
        while(true){
        this.animation_thread.start();
-       //this.getDirectionWalk();
+       this.getDirectionWalk(); //contrast with animation thread
        if (this.isDamaged==true) {
            return this.ActorWalk.paint(73);
        }
@@ -76,16 +76,16 @@ public class Player {
        }
    }
    
-   public void moving() {
+   public void moving() { //need fix
        if(this.isMoving != false){
             if (this.Ap<1) {
                this.Ap += 1;
              } else if (this.Ap>=1) {
-               this.Ap -= 3;
+               this.Ap -= 2;
              }
                //System.out.println(this.Ap);
                this.Direction += this.Ap;
-               System.out.println(this.Direction);
+               //System.out.println(this.Direction);
             } else {}
    }
    
@@ -112,7 +112,7 @@ public class Player {
    
    public int getDirection(){
        double angle;
-       angle = Math.toDegrees(Math.atan2(this.Gun.getPoint().getX()-(this.x+16),this.Gun.getPoint().getY()-(this.y+16)));
+       angle = Math.toDegrees(Math.atan2(this.Glove.getTarget().getX()-(this.x+16),this.Glove.getTarget().getY()-(this.y+16)));
        if (angle < 0){
            angle += 360;
        }
@@ -121,13 +121,15 @@ public class Player {
    
    public void get_Damage_from(Mob pMob) {
        if (pMob.Attack() == true) {
-           this.Life--;
            this.bounce();
+           this.Life -= pMob.getDamage();
        }else{ }
    }
    
    public void Damage_a_Mob(Mob pMob) throws IOException, InputErrorException {
-       if(this.Gun.getAttack()==true && pMob.Body.contains(this.Gun.getPoint())){
+       if(this.Glove.getAttack()==true && pMob.Body.contains(this.Glove.getTarget())){
+           this.Glove.setX(this.x);
+           this.Glove.setY(this.y);
            pMob.Damaged();
            this.increaseScore(pMob);
        } else {}
@@ -143,6 +145,7 @@ public class Player {
    public void update() throws MalformedURLException {
       this.move();
       this.Body = new Rectangle(this.x, this.y, this.width, this.height);
+      this.Glove.update();
     }
    
    //This function will move the player according to its direction
@@ -213,6 +216,10 @@ public class Player {
    public int getY(){
       return this.y;
    }
+   
+   public Point getPoint_position() {
+       return new Point(this.x, this.y);
+   }
 
     public int getheight() {
         return this.height;
@@ -246,7 +253,7 @@ public class Player {
          */
         public void start() {
             stop();
-            thread = new Thread(this);
+            thread = new Thread(this,"Animation Walk-Player");
             thread.start();
         }
 

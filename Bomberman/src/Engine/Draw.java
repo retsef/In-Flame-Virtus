@@ -79,10 +79,10 @@ public class Draw{
       //Nascondo il cursore
       this.canvas.setCursor(this.HIDDEN_CURSOR);
    
-      this.Scope = new Rectangle((int)Instances.player.Gun.getPoint().getX(),(int)Instances.player.Gun.getPoint().getY(),28,28);
+      this.Scope = new Rectangle((int)Instances.player.Glove.getTarget().getX(),(int)Instances.player.Glove.getTarget().getY(),28,28);
        try {
-           this.Scope_img = ImageIO.read(getClass().getResource("/images/scope.png"));
-       } catch (IOException ex) {
+           this.Scope_img = Instances.player.Glove.Fireball(23);
+       } catch (InputErrorException ex) {
            Logger.getLogger(Draw.class.getName()).log(Level.SEVERE, null, ex);
        }
       }
@@ -94,9 +94,9 @@ public class Draw{
       g.drawImage(this.Background, 0, 0, null);
        try {
            //render life and score status
-           g.drawImage(Instances.player.Heart(),this.WIDTH-35,5,24,24,null);
+           g.drawImage(Instances.player.Heart(),this.WIDTH-40,5,30,30,null);
            g.setFont(this.myFont);
-           g.drawString(Instances.player.getLife(),this.WIDTH-26,22);
+           g.drawString(Instances.player.getLife(),this.WIDTH-33,22);
            g.drawString(Instances.player.getScore(),this.WIDTH-50,this.HEIGHT-30);
            
        } catch (InputErrorException ex) { }
@@ -114,11 +114,11 @@ public class Draw{
    protected void renderPlayer(Graphics2D g) throws MalformedURLException, IOException, InterruptedException, InputErrorException{
        g.drawImage(Instances.player.Shadow(),Instances.player.getX()+1,Instances.player.getY()+5,Instances.player.getwidth(),Instances.player.getheight(), null);
        g.drawImage(Instances.player.Walk(),Instances.player.getX(),Instances.player.getY(),Instances.player.getwidth(),Instances.player.getheight(), null);
-       
+       Instances.player.Glove.Draw(g);
     }
    
    protected void renderScope(Graphics2D g) throws MalformedURLException, IOException, InterruptedException, InputErrorException {
-       g.drawImage(this.Scope_img,(int)Instances.player.Gun.getPoint().getX(),(int)Instances.player.Gun.getPoint().getY(),28,28,null);
+       g.drawImage(this.Scope_img,(int)Instances.player.Glove.getTarget().getX(),(int)Instances.player.Glove.getTarget().getY(),28,28,null);
    }
    
    protected void renderMob(Graphics2D g) throws MalformedURLException, IOException, InterruptedException, InputErrorException{

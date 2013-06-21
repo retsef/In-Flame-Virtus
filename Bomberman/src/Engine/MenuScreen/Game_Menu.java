@@ -2,7 +2,9 @@ package Engine.MenuScreen;
 
 import Engine.Game;
 import Engine.InputErrorException;
+import Engine.Instances;
 import GameObject.ValueErrorException;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -19,7 +21,6 @@ import javax.swing.*;
 public class Game_Menu {
     private int WIDTH,HEIGHT;
     private JFrame Frame;
-    private Game game;
     private Menu_Panel Menu;
     private HowToPlay_Panel howToPlay;
     
@@ -42,7 +43,7 @@ public class Game_Menu {
         this.Frame.setBackground(null);
 
         try {
-            this.game = new Game();
+            Instances.game = new Game();
         } catch (    ValueErrorException | InputErrorException | IOException ex) {
             Logger.getLogger(Game_Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -70,13 +71,21 @@ public class Game_Menu {
                 this.HowtoPlay = new HowToPlayButton();
                 add(this.start);
                 add(this.HowtoPlay);
-                this.start.setBounds(20, 20, 100, 50);
-                this.HowtoPlay.setBounds(650,500,100,50);
+                this.start.setBounds(20, 20, 200, 200);
+                this.HowtoPlay.setBounds(960,480,300,200);
                 try {
-                    this.background = ImageIO.read(getClass().getResource("/images/notebook.png"));
+                    this.background = ImageIO.read(getClass().getResource("/images/Actor_background.jpg"));
                 } catch (IOException ex) {
                     Logger.getLogger(Game_Menu.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+                this.HowtoPlay.setIcon(new ImageIcon(getClass().getResource("/images/book.png")) );
+                this.HowtoPlay.setBorder(null);
+                this.HowtoPlay.setContentAreaFilled(false);
+                
+                this.start.setIcon(new ImageIcon(getClass().getResource("/images/Fireball.png")) );
+                this.start.setBorder(null);
+                this.start.setContentAreaFilled(false);
                 
                 this.backgroundl = new JLabel(new ImageIcon(this.background));
                     this.backgroundl.setBounds(0, 0, this.background.getWidth(), this.background.getHeight());
@@ -96,7 +105,7 @@ public class Game_Menu {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    game.start();
+                    Instances.game.start();
                     Frame.setVisible(false);
                     System.gc();
                 }

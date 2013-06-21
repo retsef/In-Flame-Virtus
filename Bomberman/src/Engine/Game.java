@@ -18,11 +18,10 @@ import java.util.logging.Logger;
 public class Game implements Runnable{
     
     private int sleep = 10;
-    private Thread thread;
     private Meccanics Meccanic;
     private boolean isStart;
     public static final int MAXMob = 20;
-    
+    private Thread thread;
     public static final int WIDTH = 1240;
     public static final int HEIGTH = 700;
     
@@ -36,7 +35,7 @@ public class Game implements Runnable{
     public Game(String pNamePlayer) throws ValueErrorException, InputErrorException, IOException{
         
         Instances.player = new Player(pNamePlayer);
-        Instances.drawing = new Draw(Game.WIDTH,Game.HEIGTH,"Shot them all!");
+        Instances.drawing = new Draw(Game.WIDTH,Game.HEIGTH,"In Flame Virtus");
         
         Instances.BundleMob = new ArrayList<>();
         for (int i = 0; i < this.MAXMob; i++){
@@ -53,31 +52,27 @@ public class Game implements Runnable{
     @Override
     public void run(){
     while(true){
-             try {
+        try {
                  Instances.drawing.setFrameVisible(true);
                  Instances.player.update();
                  
+                 this.Meccanic.run();
+                 
                  for(int i = 0; i < Instances.BundleMob.size(); i++)
                     {
-                        
                         Instances.BundleMob.get(i).update();
-                        this.Meccanic.EnvironmentAction(Instances.BundleMob,Instances.player);
-                        this.Meccanic.isMobInteresect(Instances.BundleMob);
-                        
                     }
                  
-             } catch (MalformedURLException ex) { } catch (IOException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InputErrorException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        }
-             try {
                  Instances.drawing.render();
-             } catch (IOException | InterruptedException ex) { }
-             try {
                  System.gc();
                  Thread.sleep(this.sleep);
-             } catch (InterruptedException ex) { }
+                        synchronized(this) {
+                           while(!this.isStart) {
+                                   wait();
+                               }
+                        }
+        }catch (InterruptedException | IOException ex) {
+        Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);}
         }
     }
     
@@ -86,7 +81,7 @@ public class Game implements Runnable{
          */
         public void start() {
             stop();
-            this.thread = new Thread(this);
+            this.thread = new Thread(this,"Game");
             this.thread.start();
             this.iStart(true);
         }
@@ -98,7 +93,8 @@ public class Game implements Runnable{
             if (this.thread != null && this.thread.isAlive()) {
                 this.thread.interrupt();
                 this.iStart(false);
-                Instances.drawing.setFrameVisible(false);
+                //Instances.drawing.setFrameVisible(false);
+                //Instances.menu.setFrameVisible(true);
             }
         }
         
@@ -108,6 +104,21 @@ public class Game implements Runnable{
         public void restart() {
             this.stop();
             this.start();
+        }
+        
+        /**
+         * @suspend Ferma momentaneamente il tread
+         */
+        public void suspend() {
+            this.isStart = false;
+        }
+        
+        /**
+         * @resume Il tread riprende l'esecuzione
+         */
+        synchronized void resume() {
+           this.isStart = true;
+            notify();
         }
     
         public void iStart(boolean pStart){

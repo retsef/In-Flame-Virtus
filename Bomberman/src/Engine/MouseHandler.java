@@ -11,7 +11,7 @@ public class MouseHandler extends MouseAdapter{
     public void mousePressed(MouseEvent e) {
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                Instances.player.Gun.setAttack(true);
+                Instances.player.Glove.setAttack(true);
         }
     }
 
@@ -19,7 +19,7 @@ public class MouseHandler extends MouseAdapter{
     public void mouseReleased(MouseEvent e) {
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                Instances.player.Gun.setAttack(false);
+                Instances.player.Glove.setAttack(false);
         }
     }
     
@@ -27,7 +27,7 @@ public class MouseHandler extends MouseAdapter{
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        Instances.player.Gun.setTarget(e.getPoint());
+        Instances.player.Glove.setTarget(e.getPoint());
     }
     
     
