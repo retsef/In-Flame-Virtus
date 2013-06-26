@@ -1,9 +1,6 @@
 package GameObject;
 
-import Engine.Game;
-import Engine.InputErrorException;
-import Engine.Instances;
-import Engine.SpriteSheetLoader;
+import Engine.*;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -16,13 +13,13 @@ public class Mob {
     private int width,height;
     private int Life,Velocity,Point,Direction,Damage;
     private int Direction_type,type;
+    private float angle;
     private SpriteSheetLoader MobWalk,MobWalk_shadow;
     private boolean up,down,right,left;
-    public Rectangle Body;
+    private Rectangle Body;
     private boolean isMoving;
     private int Am;
     private Animation_mob animation_thread;
-    private boolean isIntersectWithPlayer;
     
     public Mob() throws ValueErrorException, InputErrorException, IOException {
         this(2,20,2,1);
@@ -38,7 +35,7 @@ public class Mob {
         this.height = 40;
         this.width = 40;
         this.Am = 0;
-        this.isIntersectWithPlayer = false;
+        this.angle = 0;
         
         this.isMoving = true;
         
@@ -53,40 +50,39 @@ public class Mob {
     
     private void move() {
         if(this.isMoving==true){
-        //detect the position of the player and try to reatch
-        if(Instances.player.getX() < this.x){
-        this.x--;
-        this.left = true;
-        this.right = false;
-        this.up = false;
-        this.down = false;
-        }else if(Instances.player.getX() > this.x){
-        this.x++;
-        this.right = true;
-        this.left = false;
-        this.up = false;
-        this.down = false;
-        }
-        if(Instances.player.getY() < this.y){
-        this.y--;
-        this.up = true;
-        this.down = false;
-        this.left = false;
-        this.right = false;
-        }else if(Instances.player.getY() > this.y){
-        this.y++;
-        this.down = true;
-        this.up = false;
-        this.left = false;
-        this.right = false;
-        }
-    } else {}
+            //detect the position of the player and try to reatch
+            if(Instances.player.getX() < this.x){
+                this.x--;
+                this.left = true;
+                this.right = false;
+                this.up = false;
+                this.down = false;
+            }else if(Instances.player.getX() > this.x){
+                this.x++;
+                this.right = true;
+                this.left = false;
+                this.up = false;
+                this.down = false;
+            }
+            if(Instances.player.getY() < this.y){
+                this.y--;
+                this.up = true;
+                this.down = false;
+                this.left = false;
+                this.right = false;
+            }else if(Instances.player.getY() > this.y){
+                this.y++;
+                this.down = true;
+                this.up = false;
+                this.left = false;
+                this.right = false;
+            }
+        } else {}
     }
     
     public void update() throws MalformedURLException {
       this.move();
       this.Body = new Rectangle(this.x, this.y, this.width, this.height);
-      this.isNearPlayer(Instances.player);
     }
     
     private void getDirectionWalk() {
@@ -127,15 +123,15 @@ public class Mob {
         }
     }
     
-    private void isNearPlayer(Player pPlayer) {
+    private boolean isNearPlayer(Player pPlayer) {
         if(this.Body.intersects(pPlayer.Body))
-            this.isIntersectWithPlayer = true;
+            return true;
         else
-            this.isIntersectWithPlayer = false;
+            return false;
     }
     
     public boolean Attack() {
-        if (this.isIntersectWithPlayer==true) {
+        if (this.isNearPlayer(Instances.player)==true) {
             return true;
         }else{
             return false;
@@ -146,6 +142,10 @@ public class Mob {
         return this.Point;
     }
 
+    public Rectangle getBody() {
+        return this.Body;
+    }
+    
     public boolean isDead() {
         if (this.Life > 0)
             return false;
@@ -186,7 +186,6 @@ public class Mob {
     }
 
     public void Draw(Graphics2D g) throws InputErrorException, IOException {
-        
         g.drawImage(this.Shadow(),this.x+1,this.y+5,this.width,this.height,null);
         g.drawImage(this.Walk(),this.x,this.y,this.width,this.height,null);
     }

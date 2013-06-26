@@ -1,22 +1,19 @@
 package GameObject;
 
-import Engine.Game;
-import Engine.InputErrorException;
-import Engine.SpriteSheetLoader;
+import Engine.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 public class Player {
    //variables which we will use 
-   private int x, y;
+   private int x,y;
    private int width,height;
    private boolean  left, right, up, down;
    private String Name;
-   private int Score,Life,Velocity,Direction;
+   private int Score,Life,Velocity,Direction,Direction_final,Range;
    private boolean isDamaged,isMoving;
    public Weapon Glove;
    private SpriteSheetLoader ActorWalk;
@@ -24,6 +21,8 @@ public class Player {
    public Rectangle Body;
    private int Ap;
    private Animation_player animation_thread;
+   //public ArrayList<Weapon> BundleGlove; //shadow glove
+   private static int MAXGlove=10;
    
    public Player (String pName){
        this.Name = pName;
@@ -38,6 +37,7 @@ public class Player {
        this.y = 0;
        
        this.Direction=1;
+       this.Direction_final=0;
        this.Ap = 0;
        
        this.Body = new Rectangle(this.x, this.y, this.width, this.height);
@@ -45,14 +45,16 @@ public class Player {
        try {
            //preset the propriety of the weapon
            this.Glove = new Weapon(1);
+           /*this.BundleGlove = new ArrayList<>();
+             for (int i = 0; i < this.MAXGlove; i++){
+                 this.BundleGlove.add(new Weapon(1));
+             }*/
        } catch (ValueErrorException ex) { }
        
        try {
            this.ActorWalk = new SpriteSheetLoader(8,12,"/images/Actor.png");
            this.Heart = new ImageIcon(getClass().getResource("/images/Heart.png")).getImage();
-       } catch (IOException | InputErrorException ex) {
-           Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
-       }
+       } catch (IOException | InputErrorException ex) { }
        
        this.spawn();
    }
@@ -72,20 +74,18 @@ public class Player {
        if (this.isDamaged==true) {
            return this.ActorWalk.paint(73);
        }
-       return this.ActorWalk.paint(this.Direction);
+       return this.ActorWalk.paint(this.Direction_final);
        }
    }
    
-   public void moving() { //need fix
+   public void moving() {
        if(this.isMoving != false){
             if (this.Ap<1) {
                this.Ap += 1;
              } else if (this.Ap>=1) {
                this.Ap -= 2;
              }
-               //System.out.println(this.Ap);
-               this.Direction += this.Ap;
-               //System.out.println(this.Direction);
+               this.Direction_final += this.Ap;
             } else {}
    }
    
@@ -107,7 +107,9 @@ public class Player {
            this.Direction=13;
        } if (this.getDirection()>293 && this.getDirection()<=338){
            this.Direction=4;
-       } else {}
+       } else {
+           this.Direction_final = this.Direction;
+       }
    }
    
    public int getDirection(){
@@ -127,7 +129,7 @@ public class Player {
    }
    
    public void Damage_a_Mob(Mob pMob) throws IOException, InputErrorException {
-       if(this.Glove.getAttack()==true && pMob.Body.contains(this.Glove.getTarget())){
+       if(this.Glove.getAttack()==true && pMob.getBody().contains(new Point(this.Glove.getX(),this.Glove.getY()))){
            this.Glove.setX(this.x);
            this.Glove.setY(this.y);
            pMob.Damaged();
@@ -229,6 +231,11 @@ public class Player {
         return this.width;
     }
    
+    public void Draw(Graphics2D g) throws InputErrorException, IOException{
+       g.drawImage(this.Shadow(),this.x+1,this.y+5,this.width,this.height, null);
+       g.drawImage(this.Walk(),this.x,this.y,this.width,this.height, null);
+    }
+    
    /**
      * Thread dell' animazione
      */

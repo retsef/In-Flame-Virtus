@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -111,17 +110,18 @@ public class Draw{
       this.bufferStrategy.show();
    }
    
-   protected void renderPlayer(Graphics2D g) throws MalformedURLException, IOException, InterruptedException, InputErrorException{
-       g.drawImage(Instances.player.Shadow(),Instances.player.getX()+1,Instances.player.getY()+5,Instances.player.getwidth(),Instances.player.getheight(), null);
-       g.drawImage(Instances.player.Walk(),Instances.player.getX(),Instances.player.getY(),Instances.player.getwidth(),Instances.player.getheight(), null);
+   protected void renderPlayer(Graphics2D g) throws IOException, InputErrorException {
+       Instances.player.Draw(g);
        Instances.player.Glove.Draw(g);
+       /*for(int k = 0; k < Instances.player.BundleGlove.size(); k++)
+        { Instances.player.BundleGlove.get(k).Draw(g); }*/
     }
    
-   protected void renderScope(Graphics2D g) throws MalformedURLException, IOException, InterruptedException, InputErrorException {
+   protected void renderScope(Graphics2D g) throws IOException, InputErrorException {
        g.drawImage(this.Scope_img,(int)Instances.player.Glove.getTarget().getX(),(int)Instances.player.Glove.getTarget().getY(),28,28,null);
    }
    
-   protected void renderMob(Graphics2D g) throws MalformedURLException, IOException, InterruptedException, InputErrorException{
+   protected void renderMob(Graphics2D g) throws IOException, InputErrorException {
        // Here we draw all the Mob.
         for(int l = 0; l < Instances.BundleMob.size(); l++)
         {
