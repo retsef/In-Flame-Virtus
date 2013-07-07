@@ -10,22 +10,24 @@ import java.util.logging.Logger;
 public class Meccanics implements Runnable{
     
     private int e,p,h;
-    private boolean isStart;
     private Thread thread;
+    private boolean isStart = false;
     
     public Meccanics(){
-        this.isStart = false;
     }
     
     public void isMobInteresect(ArrayList<Mob> pMobClan) {
-            for (p=0;p==pMobClan.size();p++){
-                if(pMobClan.get(e).getBody().intersects(pMobClan.get(p).getBody())){
+        for (e=0;e<pMobClan.size();e++){
+            for (p=0;p<pMobClan.size();p++){
+                if (e==p){}
+                else if(pMobClan.get(e).getBody().intersects(pMobClan.get(p).getBody())){
                     pMobClan.get(e).setMoving(false);
                 } else {
                     pMobClan.get(e).setMoving(true);
                 }
             }     
         }
+    }
     
     public void EnvironmentAction(ArrayList<Mob> pMobClan, Player pPlayer) throws IOException, InputErrorException {
         for (h=0;h<pMobClan.size();h++){
@@ -36,24 +38,23 @@ public class Meccanics implements Runnable{
 
     @Override
     public void run() {
-            try {
-                Instances.game.suspend();
-                this.isMobInteresect(Instances.BundleMob);
-                this.EnvironmentAction(Instances.BundleMob, Instances.player);
-                Instances.game.resume();
-                } catch (    IOException | InputErrorException ex) {
-                    Logger.getLogger(Meccanics.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            Instances.game.suspend();
+            //this.isMobInteresect(Instances.BundleMob);
+            this.EnvironmentAction(Instances.BundleMob, Instances.player);
+            Instances.game.resume();
+            } catch (    IOException | InputErrorException ex) {
+                Logger.getLogger(Meccanics.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
         /**
          * @start Avvia il thread
          */
         public void start() {
-            stop();
-            this.thread = new Thread(this,"Meccanics");
-            this.thread.start();
-            this.iStart(true);
+                this.thread = new Thread(this,"Meccanics");
+                this.thread.start();
+                this.iStart(true);
         }
 
         /**

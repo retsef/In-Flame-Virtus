@@ -15,7 +15,7 @@ public class Game implements Runnable{
     private int sleep = 20;
     private Meccanics Meccanic;
     private boolean isStart;
-    public static final int MAXMob = 5;
+    public static final int MAXMob = 30;
     private Thread thread;
     public static final int WIDTH = 1240;
     public static final int HEIGTH = 700;
@@ -36,6 +36,10 @@ public class Game implements Runnable{
         
         this.isStart = false;
         this.Meccanic = new Meccanics();
+    }
+    
+    public Meccanics get_meccanics(){
+        return this.Meccanic;
     }
     
     /**
@@ -60,7 +64,6 @@ public class Game implements Runnable{
                                wait();
                            }
                     }
-                 //this.Meccanic.start();
                  Thread.sleep(this.sleep);
                  
         }catch (InterruptedException | IOException ex) { } }
@@ -83,6 +86,7 @@ public class Game implements Runnable{
         public void stop() {
             if (this.thread != null && this.thread.isAlive()) {
                 this.thread.interrupt();
+                this.Meccanic.stop();
                 this.iStart(false);
             }
         }

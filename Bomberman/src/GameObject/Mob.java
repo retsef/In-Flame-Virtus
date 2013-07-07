@@ -1,18 +1,24 @@
 package GameObject;
 
+import Utils.SpriteSheetLoader;
 import Engine.*;
+import Utils.Sound;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Mob {
     
     private int x,y;
     private int width,height;
-    private int Life,Velocity,Point,Direction,Damage;
-    private int Direction_type,type;
+    private int Life,Velocity,Point,Direction,Direction_final,Damage;
+    private int type;
     private float angle;
     private SpriteSheetLoader MobWalk,MobWalk_shadow;
     private boolean up,down,right,left;
@@ -20,17 +26,19 @@ public class Mob {
     private boolean isMoving;
     private int Am;
     private Animation_mob animation_thread;
+    private Sound mob_sound;
     
-    public Mob() throws ValueErrorException, InputErrorException, IOException {
+    public Mob() throws ValueErrorException, InputErrorException, IOException{
         this(2,20,2,1);
     }
     
-    public Mob(int pVelocity, int pPoint, int pLife, int pDamage) throws ValueErrorException, InputErrorException, IOException {
+    public Mob(int pVelocity, int pPoint, int pLife, int pDamage) throws ValueErrorException, InputErrorException, IOException{
         this.Velocity = pVelocity;
         this.Point = pPoint;
         this.Life = pLife;
         this.Damage = pDamage;
         this.Direction = 0;
+        this.Direction_final = 0;
         this.type = 0;
         this.height = 40;
         this.width = 40;
@@ -41,6 +49,11 @@ public class Mob {
         
         this.Body = new Rectangle(this.x, this.y, this.width, this.height);
         this.animation_thread = new Animation_mob();
+        try {
+            this.mob_sound = new Sound("/home/roberto/Documenti/NetBeansProjects/bomberman/Bomberman/src/sounds/Mob_Sound.wav");
+        } catch (LineUnavailableException | UnsupportedAudioFileException ex) {
+            Logger.getLogger(Mob.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         this.MobWalk = new SpriteSheetLoader(8,12,"/images/Mob.png");
         this.MobWalk_shadow = new SpriteSheetLoader(8,12,"/images/Actor.png");
@@ -51,26 +64,26 @@ public class Mob {
     private void move() {
         if(this.isMoving==true){
             //detect the position of the player and try to reatch
-            if(Instances.player.getX() < this.x){
+            if(Instances.player.get_X() < this.x){
                 this.x--;
                 this.left = true;
                 this.right = false;
                 this.up = false;
                 this.down = false;
-            }else if(Instances.player.getX() > this.x){
+            }else if(Instances.player.get_X() > this.x){
                 this.x++;
                 this.right = true;
                 this.left = false;
                 this.up = false;
                 this.down = false;
             }
-            if(Instances.player.getY() < this.y){
+            if(Instances.player.get_Y() < this.y){
                 this.y--;
                 this.up = true;
                 this.down = false;
                 this.left = false;
                 this.right = false;
-            }else if(Instances.player.getY() > this.y){
+            }else if(Instances.player.get_Y() > this.y){
                 this.y++;
                 this.down = true;
                 this.up = false;
@@ -81,20 +94,32 @@ public class Mob {
     }
     
     public void update() throws MalformedURLException {
-      this.move();
       this.Body = new Rectangle(this.x, this.y, this.width, this.height);
+      this.move();
     }
     
     private void getDirectionWalk() {
         if(this.down==true){
-            this.Direction = 1;
-        }if(this.left==true){
-            this.Direction = 13;
-        }if (this.right==true){
-            this.Direction = 25;
-        }if (this.up==true){
-            this.Direction = 37;
-        }
+            if(this.Direction!=1){
+                this.Direction = 1;
+                this.Direction_final = (this.type + this.Direction);
+            }
+        }else if(this.left==true){
+            if(this.Direction!=13){
+                this.Direction = 13;
+                this.Direction_final = (this.type + this.Direction);
+            }
+        }else if(this.right==true){
+            if(this.Direction!=25){
+                this.Direction = 25;
+                this.Direction_final = (this.type + this.Direction);
+            }
+        }else if (this.up==true){
+            if(this.Direction!=37){
+                this.Direction = 37;
+                this.Direction_final = (this.type + this.Direction);
+            }
+        } else {}
     }
 
     public int getDamage() {
@@ -108,23 +133,20 @@ public class Mob {
     public Image Walk() throws InputErrorException, IOException{
         while(true){
         this.getDirectionWalk();
-
-        this.Direction_type = (this.type + this.Direction);
-        
-        this.animation_thread.start();
-        return this.MobWalk.paint(this.Direction_type);
+        return this.MobWalk.paint(this.Direction_final);
         }
     }
     
     public void Damaged() {
         this.Life--;
         if (this.isDead()==true){
+            this.mob_sound.play();
             this.spawn();
         }
     }
     
     private boolean isNearPlayer(Player pPlayer) {
-        if(this.Body.intersects(pPlayer.Body))
+        if(this.Body.intersects(pPlayer.get_Body()))
             return true;
         else
             return false;
@@ -178,9 +200,14 @@ public class Mob {
             if (this.Am<1) {
                this.Am += 1;
              } else if (this.Am>=1) {
-               this.Am -= 2;
+               this.Am = -1;
              }
-               this.Direction_type += this.Am;
+            
+            if(this.Am==0){
+                this.Am=1;
+            }
+            
+               this.Direction_final += this.Am;
             } else {}
        
     }
@@ -195,18 +222,21 @@ public class Mob {
      */
     private class Animation_mob implements Runnable {
 
-        private int sleep = 7000;
+        private long sleep_animation = 120;
         private Thread thread;
 
+        public Animation_mob(){
+            this.start();
+        }
+        
         @Override
         public void run() {
             try {
                 while (true) {
                     moving();
-                    Thread.sleep(this.sleep);
+                    Thread.sleep(this.sleep_animation);
                 }
-            } catch (InterruptedException ex) {
-            }
+            } catch (InterruptedException ex) { }
         }
 
         /**

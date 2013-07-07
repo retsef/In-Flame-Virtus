@@ -1,8 +1,14 @@
-package Engine;
+package Utils;
 
+import Engine.InputErrorException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+/**
+ * La classe SpriteSheetLoader, scompatta e organizza immagini accorpate in gliglie
+ * @author roberto
+ */
 
 public class SpriteSheetLoader {
    
@@ -15,10 +21,10 @@ public class SpriteSheetLoader {
    
    /**
     * @SpriteSheetLoader scompata un'immagine in in sotto immagini
-    * @param prows: righe della griglia
-    * @param pcolums: colonne della griglia
-    * @param pLocation: indirizzo della locazione dell'immagine
-    * @throws IOException: nel caso in cui si è impossibilitati a leggere l'immagine
+    * @param prows Righe della griglia
+    * @param pcolums Colonne della griglia
+    * @param pLocation Indirizzo della locazione dell'immagine
+    * @throws IOException Nel caso in cui si è impossibilitati a leggere l'immagine
     */
    
    public SpriteSheetLoader(int prows, int pcolums, String pLocation) throws IOException,InputErrorException {
@@ -45,9 +51,9 @@ public class SpriteSheetLoader {
    }
    
    /**
-    * @paint è in grado di prelevare una delle tante sotto immagini
-    * @param pi locazione del singolo elemento della griglia di immagini (pi = righe * colonne)
-    * @return restituisce un singolo elemento della griglia di immagini 
+    * Preleva una delle sotto-immagini scompattate dalla griglia
+    * @param pi Locazione del singolo elemento della griglia di immagini (pi = righe * colonne)
+    * @return Restituisce un singolo elemento della griglia di immagini 
     */
    public BufferedImage paint(int pi) throws InputErrorException {
        if (pi < 0 || pi > (this.rows * this.columns))

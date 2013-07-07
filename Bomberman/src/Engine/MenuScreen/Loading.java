@@ -1,6 +1,5 @@
 package Engine.MenuScreen;
 
-import Engine.Instances;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -15,9 +14,10 @@ public class Loading implements Runnable {
     private BufferedImage myPicture;
     private static final int sleep=300;
     private JLabel picLabel;
+    private Game_Menu menu;
     
     public Loading() throws IOException {
-        Instances.menu = new Game_Menu();
+        this.menu = new Game_Menu();
         this.Frame = new JFrame();
         this.Panel = new JPanel(null);
         this.Frame.setUndecorated(true);
@@ -47,7 +47,7 @@ public class Loading implements Runnable {
             }
         if (i==5){
             this.setFrameVisible(false);
-            Instances.menu.setFrameVisible(true);
+            this.menu.setFrameVisible(true);
         }
         }
     }

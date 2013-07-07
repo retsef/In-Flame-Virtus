@@ -4,7 +4,6 @@ import Engine.Game;
 import Engine.InputErrorException;
 import Engine.Instances;
 import GameObject.ValueErrorException;
-import com.sun.servicetag.Installer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -62,8 +61,8 @@ public class Game_Menu {
 
             private StartButton start;
             private HowToPlayButton HowtoPlay;
-            private BufferedImage background;
-            private JLabel backgroundl;
+            private BufferedImage background,title;
+            private JLabel background_label,title_label;
 
             public Menu_Panel() {
                 setLayout(null);
@@ -75,6 +74,7 @@ public class Game_Menu {
                 this.HowtoPlay.setBounds(960,480,300,200);
                 try {
                     this.background = ImageIO.read(getClass().getResource("/images/Actor_background.jpg"));
+                    this.title = ImageIO.read(getClass().getResource("/images/Game_title.png"));
                 } catch (IOException ex) {
                     Logger.getLogger(Game_Menu.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -87,9 +87,14 @@ public class Game_Menu {
                 this.start.setBorder(null);
                 this.start.setContentAreaFilled(false);
                 
-                this.backgroundl = new JLabel(new ImageIcon(this.background));
-                    this.backgroundl.setBounds(0, 0, this.background.getWidth(), this.background.getHeight());
-                    add(this.backgroundl);
+                this.title_label = new JLabel(new ImageIcon(this.title));
+                this.title_label.setBounds(0, 0, this.title.getWidth(), this.title.getHeight());
+                add(this.title_label);
+                
+                this.background_label = new JLabel(new ImageIcon(this.background));
+                this.background_label.setBounds(0, 0, this.background.getWidth(), this.background.getHeight());
+                add(this.background_label);
+                
             }
 
             private class StartButton extends JButton implements ActionListener{
@@ -138,8 +143,8 @@ public class Game_Menu {
         private class HowToPlay_Panel extends JPanel{
             
             private BackButton back;
-            private BufferedImage background,note_arrow,note_wasd,scotch_note1,scotch_note2; 
-            private JLabel backgroundl,note_wasdl,note_arrowl,scotch_note1l,scotch_note2l;
+            private BufferedImage background; 
+            private JLabel background_label;
             private InfoButton info;
             
             public HowToPlay_Panel() {
@@ -152,35 +157,15 @@ public class Game_Menu {
                 add(this.back);
                 add(this.info);
                 try {
-                    this.background = ImageIO.read(getClass().getResource("/images/notebook.png"));
-                    this.note_wasd = ImageIO.read(getClass().getResource("/images/note_wasd.png"));
-                    this.note_arrow = ImageIO.read(getClass().getResource("/images/note_arrow.png"));
-                    this.scotch_note1 = ImageIO.read(getClass().getResource("/images/scotch_note.png"));
-                    this.scotch_note2 = ImageIO.read(getClass().getResource("/images/scotch_note.png"));
+                    this.background = ImageIO.read(getClass().getResource("/images/notebook_guide.png"));
                     
                 } catch (IOException ex) {
                     Logger.getLogger(Game_Menu.class.getName()).log(Level.SEVERE, null, ex);
                 }
                     
-                    this.scotch_note1l = new JLabel(new ImageIcon(this.scotch_note1));
-                    this.scotch_note1l.setBounds(250,110, this.scotch_note1.getWidth(), this.scotch_note1.getHeight());
-                    add(this.scotch_note1l);
-                
-                    this.note_wasdl = new JLabel(new ImageIcon(this.note_wasd));
-                    this.note_wasdl.setBounds(220,120, this.note_wasd.getWidth(), this.note_wasd.getHeight());
-                    add(this.note_wasdl);
-                
-                    this.scotch_note2l = new JLabel(new ImageIcon(this.scotch_note2));
-                    this.scotch_note2l.setBounds(250,390, this.scotch_note2.getWidth(), this.scotch_note2.getHeight());
-                    add(this.scotch_note2l);
-                
-                    this.note_arrowl = new JLabel(new ImageIcon(this.note_arrow));
-                    this.note_arrowl.setBounds(250,400, this.note_arrow.getWidth(), this.note_arrow.getHeight());
-                    add(this.note_arrowl);
-                    
-                    this.backgroundl = new JLabel(new ImageIcon(this.background));
-                    this.backgroundl.setBounds(0, 0, this.background.getWidth(), this.background.getHeight());
-                    add(this.backgroundl);
+                    this.background_label = new JLabel(new ImageIcon(this.background));
+                    this.background_label.setBounds(0, 0, this.background.getWidth(), this.background.getHeight());
+                    add(this.background_label);
                 
             }
             

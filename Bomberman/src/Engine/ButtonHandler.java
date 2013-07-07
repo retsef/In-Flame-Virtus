@@ -12,19 +12,6 @@ public class ButtonHandler extends KeyAdapter {
     @Override
     public void keyPressed(KeyEvent pkey) {
         switch (pkey.getKeyCode()) {
-           //if you use arrowkey to move
-           case KeyEvent.VK_UP:
-               Instances.player.setUp(true);
-               break;
-           case KeyEvent.VK_DOWN:
-               Instances.player.setDown(true);
-               break;
-           case KeyEvent.VK_LEFT:
-               Instances.player.setLeft(true);
-               break;
-           case KeyEvent.VK_RIGHT:
-               Instances.player.setRight(true);
-               break;
            //if you use WASD to move
            case KeyEvent.VK_W:
                Instances.player.setUp(true);
@@ -39,6 +26,7 @@ public class ButtonHandler extends KeyAdapter {
                Instances.player.setRight(true);
                break;
            case KeyEvent.VK_ESCAPE: //esc button
+               System.out.println("ESC pressed");
                Instances.game.stop();
                break;
          }
@@ -48,18 +36,6 @@ public class ButtonHandler extends KeyAdapter {
     @Override
     public void keyReleased(KeyEvent pkey) {
         switch (pkey.getKeyCode()) {
-           case KeyEvent.VK_UP:
-               Instances.player.setUp(false);
-               break;
-           case KeyEvent.VK_DOWN:
-               Instances.player.setDown(false);
-               break;
-           case KeyEvent.VK_LEFT:
-               Instances.player.setLeft(false);
-               break;
-           case KeyEvent.VK_RIGHT:
-               Instances.player.setRight(false);
-               break;
            //if you use WASD to move
            case KeyEvent.VK_W:
                Instances.player.setUp(false);
@@ -72,9 +48,6 @@ public class ButtonHandler extends KeyAdapter {
                break;
            case KeyEvent.VK_D:
                Instances.player.setRight(false);
-               break;
-           case KeyEvent.VK_ESCAPE: //esc button
-               Instances.game.stop();
                break;
          }
      }

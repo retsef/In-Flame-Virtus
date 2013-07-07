@@ -78,9 +78,9 @@ public class Draw{
       //Nascondo il cursore
       this.canvas.setCursor(this.HIDDEN_CURSOR);
    
-      this.Scope = new Rectangle((int)Instances.player.Glove.getTarget().getX(),(int)Instances.player.Glove.getTarget().getY(),28,28);
+      this.Scope = new Rectangle((int)Instances.player.get_Glove().getTarget().getX(),(int)Instances.player.get_Glove().getTarget().getY(),28,28);
        try {
-           this.Scope_img = Instances.player.Glove.Fireball(23);
+           this.Scope_img = Instances.player.get_Glove().Fireball(23);
        } catch (InputErrorException ex) {
            Logger.getLogger(Draw.class.getName()).log(Level.SEVERE, null, ex);
        }
@@ -112,13 +112,13 @@ public class Draw{
    
    protected void renderPlayer(Graphics2D g) throws IOException, InputErrorException {
        Instances.player.Draw(g);
-       Instances.player.Glove.Draw(g);
+       Instances.player.get_Glove().Draw(g);
        /*for(int k = 0; k < Instances.player.BundleGlove.size(); k++)
         { Instances.player.BundleGlove.get(k).Draw(g); }*/
     }
    
    protected void renderScope(Graphics2D g) throws IOException, InputErrorException {
-       g.drawImage(this.Scope_img,(int)Instances.player.Glove.getTarget().getX(),(int)Instances.player.Glove.getTarget().getY(),28,28,null);
+       g.drawImage(this.Scope_img,(int)Instances.player.get_Glove().getTarget().getX(),(int)Instances.player.get_Glove().getTarget().getY(),28,28,null);
    }
    
    protected void renderMob(Graphics2D g) throws IOException, InputErrorException {
