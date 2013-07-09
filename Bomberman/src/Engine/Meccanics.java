@@ -35,6 +35,27 @@ public class Meccanics implements Runnable{
             pPlayer.get_Damage_from(pMobClan.get(h));
         }
     }
+    
+    public void Environment_player(Player pPlayer){
+        if(pPlayer.get_Glove().getAttack()){
+            System.out.println(pPlayer.get_Glove().get_count_Attack());
+           for(int count=0;count<pPlayer.get_Glove().get_count_Attack();count++){
+              pPlayer.BundleGlove.add(pPlayer.get_Glove());
+              pPlayer.get_Glove().set_if_Fireball_moved(false);
+           }
+       }
+    }
+    
+    public void Environment_playeraction(Player pPlayer){
+        System.out.println(pPlayer.BundleGlove.size());
+       for (int g=0; g < pPlayer.BundleGlove.size(); g++){
+           pPlayer.BundleGlove.get(g).update();
+           if(!pPlayer.BundleGlove.get(g).get_if_Fireball_moved()){
+               pPlayer.BundleGlove.remove(g);
+               pPlayer.get_Glove().set_count_Attack(pPlayer.get_Glove().get_count_Attack()-1);
+           }
+       }
+    }
 
     @Override
     public void run() {
@@ -42,6 +63,8 @@ public class Meccanics implements Runnable{
             Instances.game.suspend();
             //this.isMobInteresect(Instances.BundleMob);
             this.EnvironmentAction(Instances.BundleMob, Instances.player);
+            this.Environment_player(Instances.player);
+            this.Environment_playeraction(Instances.player);
             Instances.game.resume();
             } catch (    IOException | InputErrorException ex) {
                 Logger.getLogger(Meccanics.class.getName()).log(Level.SEVERE, null, ex);

@@ -22,15 +22,15 @@ public class MouseHandler extends MouseAdapter{
                 Instances.player.get_Glove().setAttack(false);
         }
     }
-    
-    
 
     @Override
     public void mouseMoved(MouseEvent e) {
         Instances.player.get_Glove().setTarget(e.getPoint());
     }
-    
-    
-    
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Instances.player.get_Glove().set_count_Attack(e.getClickCount());
+    }
     
 }

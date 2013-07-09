@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 /**
  * 
+ * Inizializza il gioco e tutte le sue componenti
  * @author Roberto
- * @Game Inizializza il gioco di per se
  */
 
 public class Game implements Runnable{
@@ -15,10 +15,22 @@ public class Game implements Runnable{
     private int sleep = 20;
     private Meccanics Meccanic;
     private boolean isStart;
-    public static final int MAXMob = 30;
+    public static final int MAXMob = 5;
     private Thread thread;
     public static final int WIDTH = 1240;
     public static final int HEIGTH = 700;
+    
+    /**
+     * Crea un tipo Game
+     * 
+     * @param MAXMob Numero di Mob sullo schermo
+     * @param WIDTH Larghezza della finestra di gioco
+     * @param HEIGTH Altezza della finestra di gioco
+     * 
+     * @throws ValueErrorException Nel caso in cui valori degli elementi del gioco sono errati
+     * @throws InputErrorException 
+     * @throws IOException Nel caso in cui i file del gioco sono errati
+     */
     
     public Game() throws ValueErrorException, InputErrorException, IOException{
         this("Guy");

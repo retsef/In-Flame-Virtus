@@ -113,8 +113,10 @@ public class Draw{
    protected void renderPlayer(Graphics2D g) throws IOException, InputErrorException {
        Instances.player.Draw(g);
        Instances.player.get_Glove().Draw(g);
-       /*for(int k = 0; k < Instances.player.BundleGlove.size(); k++)
-        { Instances.player.BundleGlove.get(k).Draw(g); }*/
+       for(int k = 0; k < Instances.player.BundleGlove.size(); k++)
+        { 
+            Instances.player.BundleGlove.get(k).Draw(g); 
+        }
     }
    
    protected void renderScope(Graphics2D g) throws IOException, InputErrorException {

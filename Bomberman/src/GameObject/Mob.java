@@ -3,6 +3,7 @@ package GameObject;
 import Utils.SpriteSheetLoader;
 import Engine.*;
 import Utils.Sound;
+import Utils.SoundException;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -10,8 +11,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Mob {
     
@@ -49,9 +48,10 @@ public class Mob {
         
         this.Body = new Rectangle(this.x, this.y, this.width, this.height);
         this.animation_thread = new Animation_mob();
+        
         try {
-            this.mob_sound = new Sound("/home/roberto/Documenti/NetBeansProjects/bomberman/Bomberman/src/sounds/Mob_Sound.wav");
-        } catch (LineUnavailableException | UnsupportedAudioFileException ex) {
+            this.mob_sound = new Sound("/sounds/Mob_Sound.wav");
+        } catch (SoundException ex) {
             Logger.getLogger(Mob.class.getName()).log(Level.SEVERE, null, ex);
         }
         

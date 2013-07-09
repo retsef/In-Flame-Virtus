@@ -40,8 +40,6 @@ public class Player {
         this.isMoving = false;
         this.height = 40;
         this.width = 40;
-        this.x = 0;
-        this.y = 0;
 
         this.Direction=1;
         this.Direction_final=0;
@@ -167,10 +165,7 @@ public class Player {
        this.Body = new Rectangle(this.x, this.y, this.width, this.height);
        this.Glove.update();
        Instances.game.get_meccanics().run();
-       /*this.Shadow_Glove();
-       for (int g=0; g < this.BundleGlove.size(); g++){
-           this.BundleGlove.get(g).update();
-       }*/
+       
      }
 
     private void Shadow_Glove(){ //bundle of weapon trowed

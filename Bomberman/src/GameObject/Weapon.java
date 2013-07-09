@@ -7,8 +7,8 @@ import java.io.IOException;
 
 public class Weapon {
 
-    private int Damage,Velocity;
-    private int x,y,target_x,target_y,height,width;
+    private int Damage,Velocity,Counter;
+    private int x,y,mem_target_x,mem_target_y,height,width;
     private boolean attack,Fireball_moved;
     private float Direction;
     private Point target;
@@ -29,11 +29,12 @@ public class Weapon {
         this.y = 0;
         this.width = 28;
         this.height = 28;
-        this.target_x = 0;
-        this.target_y = 0;
+        this.mem_target_x = 0;
+        this.mem_target_y = 0;
         
-        this.Velocity = 5;
+        this.Velocity = 2;
         this.Direction = 0;
+        this.Counter = 0;
         
         this.attack = false;
         this.Fireball_moved = false;
@@ -67,29 +68,29 @@ public class Weapon {
     public void Reach() {
         if(this.attack){
             this.Fireball_moved=true;
-            this.target_x = (int)this.target.x;
-            this.target_y = (int)this.target.y;
+            this.set_Target_mem(this.target);
             this.x = Instances.player.get_X();
             this.y = Instances.player.get_Y();
-            this.Direction = (this.target_y/this.target_x);
+            this.Direction = (this.mem_target_y/this.mem_target_x);
         }else if(this.is_Reached()){
             this.Fireball_moved=false;
         }
-        
-        if(this.target_x < this.x){
-            this.x -= this.Velocity;
-        }else if(this.target_x > this.x){
-            this.x += this.Velocity;
-        }
-        if(this.target_y < this.y){
-            this.y -= this.Velocity;
-        }else if(this.target_y > this.y){
-            this.y += this.Velocity;
-        }
+        //if(!this.is_Reached()){
+            if(this.mem_target_x < this.x){
+                this.x -= this.Velocity;
+            }else if(this.mem_target_x > this.x){
+                this.x += this.Velocity;
+            }
+            if(this.mem_target_y < this.y){
+                this.y -= this.Velocity;
+            }else if(this.mem_target_y > this.y){
+                this.y += this.Velocity;
+            }
+        //}
     }
     
     private boolean is_Reached() {
-        if(this.x==this.target_x&&this.y==this.target_y) {
+        if(this.x==this.mem_target_x&&this.y==this.mem_target_y) {
             return true;
         } else {
             return false;
@@ -106,6 +107,14 @@ public class Weapon {
     
     public boolean getAttack() {
         return this.attack;
+    }
+    
+    public int get_count_Attack() {
+        return this.Counter;
+    }
+    
+    public void set_count_Attack(int pCount) {
+        this.Counter = pCount;
     }
     
     public boolean get_if_Fireball_moved(){
@@ -125,8 +134,8 @@ public class Weapon {
     }
     
     public void set_Target_mem(Point pPoint) {
-        this.target_x = (int)pPoint.getX();
-        this.target_y = (int)pPoint.getY();
+        this.mem_target_x = (int)pPoint.getX();
+        this.mem_target_y = (int)pPoint.getY();
     }
     
     public Rectangle getBody() {
