@@ -1,18 +1,11 @@
 package Engine;
 
-import GameObject.Mob;
-import GameObject.Player;
-import java.util.ArrayList;
-
 /**
- *
+ * La classe Instances mantiene le instanze degli elementi del gioco
  * @author roberto
+ * {@value game} Il gioco principale
  */
 public class Instances {
-    
     public static Game game;
-    public static Draw drawing;
-    public static ArrayList<Mob> BundleMob;
-    public static Player player;
     
 }

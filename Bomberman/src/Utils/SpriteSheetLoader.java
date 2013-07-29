@@ -1,6 +1,5 @@
 package Utils;
 
-import Engine.InputErrorException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -27,18 +26,22 @@ public class SpriteSheetLoader {
     * @throws IOException Nel caso in cui si è impossibilitati a leggere l'immagine
     */
    
-   public SpriteSheetLoader(int prows, int pcolums, String pLocation) throws IOException,InputErrorException {
+   public SpriteSheetLoader(int prows, int pcolums, String pLocation) throws SpriteException {
       if (prows <=0) {
-          throw new InputErrorException("Numero di colonne della griglia non valida");
+          throw new SpriteException("Numero di colonne della griglia non valida");
       }
       if (pcolums<=0) {
-          throw new InputErrorException("Numero di righe della griglia non valida");
+          throw new SpriteException("Numero di righe della griglia non valida");
       }
       
       this.rows = prows;
       this.columns = pcolums;
       this.sprites = new BufferedImage[this.rows * this.columns];
-      this.spriteSheet = ImageIO.read(getClass().getResource(pLocation));
+      try{
+          this.spriteSheet = ImageIO.read(getClass().getResource(pLocation));
+      }catch(Exception ex){
+          throw new SpriteException(pLocation + " non e' un path valido");
+      }
       this.height = (int)(this.spriteSheet.getTileHeight() / this.rows);
       this.width = (int)(this.spriteSheet.getTileWidth() / this.columns);
       
@@ -55,9 +58,9 @@ public class SpriteSheetLoader {
     * @param pi Locazione del singolo elemento della griglia di immagini (pi = righe * colonne)
     * @return Restituisce un singolo elemento della griglia di immagini 
     */
-   public BufferedImage paint(int pi) throws InputErrorException {
+   public BufferedImage paint(int pi) throws SpriteException {
        if (pi < 0 || pi > (this.rows * this.columns))
-           throw new InputErrorException("la sotto immagine a cui cerchi di accedere non esiste: n" + pi);     
+           throw new SpriteException("la sotto immagine a cui cerchi di accedere non esiste: n" + pi);     
        return this.sprites[pi];
    }
     /**

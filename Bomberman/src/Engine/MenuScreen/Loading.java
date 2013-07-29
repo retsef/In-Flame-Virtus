@@ -6,7 +6,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
+/**
+ * Finestra di caricamente
+ * Serve al caricamento del gioco in memoria
+ * @author roberto
+ */
 public class Loading implements Runnable {
     private JFrame Frame;
     private JPanel Panel;
@@ -14,8 +18,11 @@ public class Loading implements Runnable {
     private BufferedImage myPicture;
     private static final int sleep=300;
     private JLabel picLabel;
-    private Game_Menu menu;
-    
+    public static Game_Menu menu;
+    /**
+     * Crea la finestra di Loading
+     * @throws IOException Restituisce un Exception se l'immagine e' errata
+     */
     public Loading() throws IOException {
         this.menu = new Game_Menu();
         this.Frame = new JFrame();
@@ -51,7 +58,10 @@ public class Loading implements Runnable {
         }
         }
     }
-    
+    /**
+     * Impone se la finestra deve essere visibile o no
+     * @param b Boolean che setta l'esito
+     */
     public void setFrameVisible(boolean b){
        if (b==true)
            this.Frame.setVisible(true);

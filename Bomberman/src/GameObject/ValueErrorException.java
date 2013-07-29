@@ -1,5 +1,9 @@
 package GameObject;
 
+/**
+ * L'Exception gestisce i volori di parametri errati
+ * @author roberto
+ */
 public class ValueErrorException extends Exception {
 
     public ValueErrorException() {

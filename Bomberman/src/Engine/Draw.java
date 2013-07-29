@@ -1,5 +1,6 @@
 package Engine;
 
+import Utils.SpriteException;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -9,7 +10,11 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-
+/**
+ * La classe grafica gli elementi attivi del gioco
+ * E' adoperato come un server grafico addetto ad renderizzare ogni elemento che gli viene dato in pasto
+ * @author roberto
+ */
 public class Draw{
    private JFrame frame; //finestra
    private Canvas canvas; //tavolozza per graficare l'area di gioco
@@ -23,18 +28,19 @@ public class Draw{
    //Cursore invisibile
    private Cursor HIDDEN_CURSOR;
    private Rectangle Scope;
-   
+   /**
+    * @param HEIGHT Altezza finestra
+    * @param WIDTH Larghezza della finestra
+    */
    public int WIDTH; // dimensioni finestra
    public int HEIGHT;
    
    /**
-    * @Finestra_Gioco inizializza la finestra di gioco
+    * Inizializza la finestra di gioco
+    * @param pwidth Larghezza della finestra
+    * @param pheight Altezza della finestra
+    * @param pString Titolo della finestra
     */
-   public Draw() {
-       this(800,600,"Titolo Finestra");
-   }
-   
-   
    public Draw(int pwidth,int pheight,String pString){
       this.WIDTH = pwidth;
       this.HEIGHT = pheight;
@@ -78,59 +84,77 @@ public class Draw{
       //Nascondo il cursore
       this.canvas.setCursor(this.HIDDEN_CURSOR);
    
-      this.Scope = new Rectangle((int)Instances.player.get_Glove().getTarget().getX(),(int)Instances.player.get_Glove().getTarget().getY(),28,28);
+      this.Scope = new Rectangle((int)Game.get_player().get_Glove().getTarget().getX(),(int)Game.get_player().get_Glove().getTarget().getY(),28,28);
        try {
-           this.Scope_img = Instances.player.get_Glove().Fireball(23);
-       } catch (InputErrorException ex) {
+           this.Scope_img = Game.get_player().get_Glove().Fireball(23);
+       } catch (SpriteException ex) {
            Logger.getLogger(Draw.class.getName()).log(Level.SEVERE, null, ex);
        }
       }
    
-   public void render() throws IOException, InterruptedException {
+   /**
+    * Il costutto renderizza tutti gli elementi del gioco
+    * Puo' essere visto come un grosso secchio contenente tutto quello che viene visto su schermo
+    * @throws IOException Restituisce un Exception nel caso le immagini sono errate
+    */
+   public void render() throws IOException{
       Graphics2D g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
       g.clearRect(0, 0, this.WIDTH, this.HEIGHT);
       //render of background
       g.drawImage(this.Background, 0, 0, null);
-       try {
-           //render life and score status
-           g.drawImage(Instances.player.Heart(),this.WIDTH-40,5,30,30,null);
-           g.setFont(this.myFont);
-           g.drawString(Instances.player.getLife(),this.WIDTH-33,22);
-           g.drawString(Instances.player.getScore(),this.WIDTH-50,this.HEIGHT-30);
-           
-       } catch (InputErrorException ex) { }
+        //render life and score status
+        g.drawImage(Game.get_player().Heart(),this.WIDTH-40,5,30,30,null);
+        g.setFont(this.myFont);
+        g.drawString(Game.get_player().getLife(),this.WIDTH-33,22);
+        g.drawString(Game.get_player().getScore(),this.WIDTH-50,this.HEIGHT-30);
        try {
            this.renderPlayer(g);
            this.renderMob(g);
            this.renderScope(g);
-       } catch (InputErrorException ex) {
+       } catch (SpriteException ex) {
            Logger.getLogger(Draw.class.getName()).log(Level.SEVERE, null, ex);
        }
       g.dispose();
       this.bufferStrategy.show();
    }
-   
-   protected void renderPlayer(Graphics2D g) throws IOException, InputErrorException {
-       Instances.player.Draw(g);
-       Instances.player.get_Glove().Draw(g);
-       for(int k = 0; k < Instances.player.BundleGlove.size(); k++)
+   /**
+    * Grafica gli elementi di tipo Player
+    * @param g Oggetto che contiene i metodi grafici
+    * @throws SpriteException Restituisce un Exception nel caso gli Sprite sono errati
+    */
+   protected void renderPlayer(Graphics2D g) throws SpriteException {
+       Game.get_player().Draw(g);
+       Game.get_player().get_Glove().Draw(g);
+       /*
+       for(int k = 0; k < Game.get_player().BundleGlove.size(); k++)
         { 
-            Instances.player.BundleGlove.get(k).Draw(g); 
-        }
+            Game.get_player().BundleGlove.get(k).Draw(g); 
+        }*/
     }
-   
-   protected void renderScope(Graphics2D g) throws IOException, InputErrorException {
-       g.drawImage(this.Scope_img,(int)Instances.player.get_Glove().getTarget().getX(),(int)Instances.player.get_Glove().getTarget().getY(),28,28,null);
+   /**
+    * Grafica gli elementi del puntatore
+    * @param g Oggetto che contiene i metodi grafici
+    * @throws SpriteException Restituisce un Exception nel caso gli Sprite sono errati
+    */ 
+   protected void renderScope(Graphics2D g) throws SpriteException {
+       g.drawImage(this.Scope_img,(int)Game.get_player().get_Glove().getTarget().getX(),(int)Game.get_player().get_Glove().getTarget().getY(),28,28,null);
    }
-   
-   protected void renderMob(Graphics2D g) throws IOException, InputErrorException {
+   /**
+    * Grafica gli elementi di tipo Mob
+    * @param g Oggetto che contiene i metodi grafici
+    * @throws SpriteException Restituisce un Exception nel caso gli Sprite sono errati
+    */
+   protected void renderMob(Graphics2D g) throws SpriteException {
        // Here we draw all the Mob.
-        for(int l = 0; l < Instances.BundleMob.size(); l++)
+        for(int l = 0; l < Game.get_Bundle_Mob().size(); l++)
         {
-            Instances.BundleMob.get(l).Draw(g);
+            Game.get_Bundle_Mob().get(l).Draw(g);
         }
     }
-   
+   /**
+    * Impone la decisione di mostrare la finestra o no
+    * @param b Boolena che impone l'esito
+    */
    public void setFrameVisible(boolean b){
        if (b==true)
            this.frame.setVisible(true);

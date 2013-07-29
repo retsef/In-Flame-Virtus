@@ -1,128 +1,100 @@
 package Utils;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import javax.sound.sampled.*;
-
 /**
- * La classe Sound modella, riproduce e gestisce un suono in formato WAVE.
- *
- * @author Lorenzo
+ * La classe gestisce il Suono in formato WAV
+ * @author roberto
  */
 public class Sound {
-
-    private static final Line.Info INFO = new Line.Info(Clip.class);
-    private static HashMap<String, Sound> map;
-    private URL soundUrl;
-    private Clip readyClip;
-
+    
+    private AudioInputStream audioInputStream;
+    private URL url;
+    private Clip clip;
+    private AudioFormat format;
+    private DataLine.Info info;
+    
     /**
-     * Crea un nuovo suono a partire dal path assoluto di un file WAVE.
-     *
-     * @param path Il path assoluto di un file WAVE.
-     * @throws SoundException Se il path non risulta puntare ad un corretto file
-     * WAVE
+     * Crea un nuovo Sound pronto per essere riprodotto
+     * @param path Locazione del file WAV
+     * @throws SoundException Restituisce un Exception nel caso in cui non si riesca a riprodurre il suono
      */
-    public Sound(String path) throws SoundException {
-        URL url = this.getClass().getResource(path);
-        if (url == null) {
-            throw new SoundException("Cannot read " + url.getPath());
-        }
-        this.soundUrl = url;
-        this.readyClip = this.getNewClip();
-    }
-
-    /**
-     * Riproduce una volta il suono
-     *
-     * @return Un oggetto di tipo Clip che permette di gestire il suono
-     */
-    public Clip play() {
-        return play(1);
-    }
-
-    /**
-     * Riproduce all'infinito il suono
-     *
-     * @return Un oggetto di tipo Clip che permette di gestire il suono
-     */
-    public Clip loop() {
-        return play(-1);
-    }
-
-    /**
-     * Riproduce n volte il suono
-     *
-     * @param times Il numero di volte da riprodurre il suono (un numero
-     * negativo provoca una riproduzione in loop)
-     * @return Un oggetto di tipo Clip che permette di gestire il suono
-     */
-    public Clip play(int times) {
-        Clip clip = null;
-        try {
-            clip = getNewClip();
-        } catch (SoundException ex) {
-            throw new RuntimeException(ex);
-        }
-        if (clip != null && times != 0) {
-            clip.loop(times - 1);
-        }
-        return clip;
-    }
-
-    /**
-     * Crea e restituisce un nuovo Clip del suono, pronto per essere riprodotto
-     *
-     * @return Un oggetto di tipo Clip che permette di gestire il suono
-     * @throws SoundException Se non è possibile ottenere un Clip dal suono
-     */
-    public final Clip getNewClip() throws SoundException {
-        try {
-            if (this.readyClip == null) {
-                this.readyClip = Sound.getNewClip(this.soundUrl);
+    public Sound(String path) throws SoundException{
+            //URL pUrl = this.getClass().getResource(path);
+            //this.soundFile = ;
+            this.url = this.getClass().getResource(path);
+            if (this.url == null) {
+                throw new SoundException("Cannot read " + url.getPath());
             }
-            Clip c = this.readyClip;
-            this.readyClip = Sound.getNewClip(this.soundUrl);
-            return c;
-        } catch (SoundException ex) {
-            this.readyClip = null;
-            throw ex;
-        }
+            //this.inputStream = new InputStream
+            //this.audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(path));
+            //this.clip = AudioSystem.getClip();
+            //this.clip = AudioSystem.getClip();
+        
     }
-
     /**
-     * Restituisce una HashMap (sempre la stessa istanza) utilizzabile per
-     * gestire con comodità una collezione di suoni. Ad ogni nuovo suono
-     * aggiunto a tale struttura dati è necessario associare un nome mnemonico
-     * per poter richiamare successivamente il suono stesso
-     *
-     * @return Una struttura dati di tipo HashMap per la gestione multipla di
-     * suoni
+     * Permette di mandare in loop la traccia
+     * @throws SoundException Restituisce un Exception nel caso in cui non si riesca a riprodurre il suono
      */
-    public static HashMap<String, Sound> getMap() {
-        if (map == null) {
-            map = new HashMap<String, Sound>();
-        }
-        return map;
+    public void loop() throws SoundException{
+        this.play(-1);
     }
-
     /**
-     * Crea e restituisce un nuovo Clip di un file WAVE, pronto per essere
-     * riprodotto
-     *
-     * @param clipURL Il file WAVE dal quale ottenere un Clip
-     * @return Un oggetto di tipo Clip che permette di gestire il suono
-     * @throws SoundException Se non è possibile ottenere un Clip dal file
+     * Permette di riprodurre una volta sola la traccia
+     * @throws SoundException Restituisce un Exception nel caso in cui non si riesca a riprodurre il suono
      */
-    public static Clip getNewClip(URL clipURL) throws SoundException {
-        Clip clip = null;
+    public void play() throws SoundException{
+        this.play(1);
+    }
+    /**
+     * Permette di riprodurre un suono piu' volte
+     * @param i Determina quante volte deve essere eseguita la riproduzione della traccia
+     * @throws SoundException Restituisce un Exception nel caso in cui non si riesca a riprodurre il suono
+     */
+    public void play(int i) throws SoundException{
         try {
-            clip = (Clip) AudioSystem.getLine(INFO);
-            clip.open(AudioSystem.getAudioInputStream(clipURL));
-        } catch (Exception ex) {
-            throw new SoundException(clipURL.getFile(), ex);
+            if(this.clip!=null){
+                this.stop();
+            }
+            this.init_Audio();
+            if(i == -1){
+                this.clip.loop(20);
+            }else if(i == 1){
+                this.clip.loop(0);
+            } else {
+                this.clip.loop(i);
+            }
+            //while(this.clip.getMicrosecondLength() != this.clip.getMicrosecondPosition()){ }
+            //this.clip.close();
+        }catch(Exception ex){
+            throw new SoundException(this.clip + " " + this.audioInputStream,ex);
         }
-        return clip;
     }
+    /**
+     * Permette di fermare l'esecuzione della traccia
+     */
+    public void stop() {
+        this.clip.drain();
+        this.clip.stop();
+        this.clip.close();
+        System.gc();
+    }
+    /**
+     * Permette di generare un nuovo suono pronto per essere riprodotto
+     * @throws SoundException Restituisce un Exception nel caso in cui non si riesca a riprodurre il suono
+     */
+    public void init_Audio() throws SoundException{
+        try{
+            System.gc();
+            this.audioInputStream = AudioSystem.getAudioInputStream(this.url);
+            this.format = this.audioInputStream.getFormat();
+            this.info = new DataLine.Info(Clip.class, format);
+            this.clip = (Clip)AudioSystem.getLine(this.info);
+            //this.clip = AudioSystem.getClip();
+            this.clip.open(this.audioInputStream);
+        }catch(Exception ex){
+            throw new SoundException("Cannot read input file " + ex.getStackTrace());
+        }
+    }
+    
 }

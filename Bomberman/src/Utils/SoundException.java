@@ -15,6 +15,6 @@ public class SoundException extends Exception {
     }
 
     public SoundException(Throwable cause) {
-        super(cause);
+        cause.printStackTrace();
     }
 }
